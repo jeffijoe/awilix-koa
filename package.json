@@ -4,7 +4,7 @@
   "description": "A boilerplate for authoring npm modules",
   "main": "lib/awilix-koa.js",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "scripts": {
     "test": "mocha test/**/*.js --require test/index.js",
