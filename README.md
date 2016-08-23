@@ -43,6 +43,7 @@ app.use((ctx, next) => {
   ctx.state.container.registerValue({
     user: ctx.state.user // from some authentication middleware..
   })
+  return next()
 })
 ```
 
