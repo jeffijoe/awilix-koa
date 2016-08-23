@@ -1,6 +1,6 @@
 {
   "name": "awilix-koa",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Awilix helpers + middleware for Koa 2",
   "main": "lib/awilix-koa.js",
   "engines": {
