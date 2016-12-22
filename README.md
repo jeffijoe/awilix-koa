@@ -217,7 +217,7 @@ const container = createContainer()
 
 // The `TodosService` lives in services/TodosService
 container.loadModules([
-  ['services/*.js', Lifeitme.SCOPED] // shortcut to make all services scoped
+  ['services/*.js', Lifetime.SCOPED] // shortcut to make all services scoped
 ], {
   // we want `TodosService` to be registered as `todosService`.
   formatName: 'camelCase'
