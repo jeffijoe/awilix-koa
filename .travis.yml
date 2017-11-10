@@ -19,11 +19,10 @@ before_script:
   - npm run build
 
 # Runs the coverage script (which runs the tests)
-script: npm run cover
+script: npm run coveralls
 
 # Code coverage
 after_success:
-  - npm run coveralls
   - npm run semantic-release
 
 branches:

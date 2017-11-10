@@ -1,6 +1,6 @@
 {
   "name": "awilix-koa",
-  "version": "0.0.0-semantic",
+  "version": "0.0.0-development",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -37,6 +37,9 @@
   },
   "homepage": "https://github.com/jeffijoe/awilix-koa#readme",
   "dependencies": {
+    "awilix-router-core": "^1.2.0",
+    "koa-compose": "^4.0.0",
+    "koa-router": "^7.2.1",
     "tslib": "^1.8.0"
   },
   "devDependencies": {
@@ -46,16 +49,18 @@
     "@types/jest": "^21.1.5",
     "@types/koa": "^2.0.40",
     "@types/koa-router": "^7.0.24",
-    "@types/node": "^8.0.50",
+    "@types/node": "^8.0.51",
     "@types/prettier": "^1.8.0",
     "@types/rimraf": "^2.0.2",
     "assert-request": "^1.0.6",
     "awilix": "^2.10.0",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-latest": "^6.24.1",
     "coveralls": "^3.0.0",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "koa": "^2.4.1",
-    "koa-router": "^7.2.1",
     "lint-staged": "^4.3.0",
     "prettier": "^1.8.2",
     "rimraf": "^2.6.1",
@@ -89,7 +94,8 @@
     ],
     "coverageDirectory": "<rootDir>/coverage",
     "transform": {
-      "\\.(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "\\.(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js",
+      "\\.(js|jsx)": "babel-jest"
     },
     "moduleFileExtensions": [
       "ts",
@@ -127,5 +133,10 @@
       "mergeCorrespondence": "['id', 'source']"
     }
   },
-  "peerDependencies": {}
+  "babel": {
+    "presets": [
+      "latest"
+    ],
+    "plugins": "transform-decorators-legacy"
+  }
 }
