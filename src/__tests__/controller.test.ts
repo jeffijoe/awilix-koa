@@ -76,7 +76,8 @@ function createServer(): Promise<[http.Server, any]> {
   )
   return new Promise(resolve => {
     const server = app.listen(() => {
-      resolve([server, AssertRequest(server)])
+      const addr = server.address()
+      resolve([server, AssertRequest(`http://127.0.0.1:${addr.port}`)])
     })
   })
 }

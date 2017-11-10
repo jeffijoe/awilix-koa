@@ -73,12 +73,13 @@ describe('integration', function() {
     }
     return createServer(spies).then(s => {
       server = s
-      request = AssertRequest(server)
+      const addr = server.address()
+      request = AssertRequest(`http://127.0.0.1:${addr.port}`)
     })
   })
 
-  afterEach(function(done) {
-    server.close(done)
+  afterEach(function() {
+    server.close()
   })
 
   describe('makeInvoker', function() {
