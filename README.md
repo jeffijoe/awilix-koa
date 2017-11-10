@@ -6,7 +6,9 @@
 [![Build Status](https://travis-ci.org/jeffijoe/awilix-koa.svg?branch=master)](https://travis-ci.org/jeffijoe/awilix-koa)
 [![Coverage Status](https://coveralls.io/repos/github/jeffijoe/awilix-koa/badge.svg?branch=master)](https://coveralls.io/github/jeffijoe/awilix-koa?branch=master)
 
-Awilix helpers, router and scope-instantiating middleware for **Koa**. :rocket:
+Awilix helpers, router and scope-instantiating middleware for **Koa**. 🐨
+
+> ✨ **NEW IN V1**: [first-class router support with auto-loading!](#awesome-usage) 🚀
 
 # Installation
 
@@ -70,7 +72,7 @@ router.get('/todos', api('find'))
 
 # Awesome Usage
 
-**As of `awilix-koa@1.0.0`**, we ship with bindings for [`awilix-router-core`](https://github.com/jeffijoe/awilix-router-core)! 
+**As of `awilix-koa@1.0.0`**, we ship with `koa-router` bindings for [`awilix-router-core`](https://github.com/jeffijoe/awilix-router-core)! 
 This is cool because now your routing setup can be streamlined with first-class Awilix support!
 
 The Awilix-based router comes in 2 flavors: **a builder** and **ESNext decorators**.
