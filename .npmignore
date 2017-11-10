@@ -1,2 +1,6 @@
 examples
-test
+coverage
+.test-out
+src
+**/__tests__/**
+**/__helpers__/**
