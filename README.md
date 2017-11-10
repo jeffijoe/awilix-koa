@@ -132,7 +132,7 @@ export default class UserAPI {
 ```js
 import Koa from 'koa'
 import { createContainer } from 'awilix'
-import { loadControllers, scopePerRequest } from 'awilix-koa' // or `awilix-router-core`
+import { loadControllers, scopePerRequest } from 'awilix-koa'
 
 const app = new Koa()
 // Loads all controllers in the `routes` folder 
