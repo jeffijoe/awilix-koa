@@ -135,14 +135,14 @@ import { createContainer } from 'awilix'
 import { loadControllers, scopePerRequest } from 'awilix-koa'
 
 const app = new Koa()
-// Loads all controllers in the `routes` folder 
-// relative to the current working directory.
-// This is a glob pattern.
 const container = createContainer()
   .registerClass({
     userService: /*...*/,
     todoService: /*...*/
   })
+// Loads all controllers in the `routes` folder 
+// relative to the current working directory.
+// This is a glob pattern.
 app.use(scopePerRequest(container))
 app.use(loadControllers('routes/*.js', { cwd: __dirname }))
 
