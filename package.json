@@ -1,6 +1,6 @@
 {
   "name": "awilix-koa",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
