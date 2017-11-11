@@ -152,10 +152,10 @@ const container = createContainer()
     userService: /*...*/,
     todoService: /*...*/
   })
+app.use(scopePerRequest(container))
 // Loads all controllers in the `routes` folder 
 // relative to the current working directory.
 // This is a glob pattern.
-app.use(scopePerRequest(container))
 app.use(loadControllers('routes/*.js', { cwd: __dirname }))
 
 app.listen(3000)
