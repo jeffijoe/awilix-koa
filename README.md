@@ -64,7 +64,6 @@ app.use((ctx, next) => {
 Then in your route handlers...
 
 ```js
-// There's a makeClassInvoker for classes..
 const { makeInvoker } = require('awilix-koa')
 
 function makeAPI ({ todosService }) {
@@ -292,10 +291,10 @@ export default function (router) {
 In our route handler, do the following:
 
 ```js
-import { makeClassInvoker } from 'awilix-koa'
+import { makeInvoker } from 'awilix-koa'
 
 export default function (router) {
-  const api = makeClassInvoker(TodoAPI)
+  const api = makeInvoker(TodoAPI)
   router.get('/todos', api('getTodos'))
 }
 ```
@@ -330,7 +329,7 @@ app.use((ctx, next) => {
 })
 ```
 
-Now **that** is way simpler! If you are more of a factory-function aficionado like myself, you can use `makeInvoker` in place of `makeClassInvoker`:
+Now **that** is way simpler!
 
 ```js
 import { makeInvoker } from 'awilix-koa'
@@ -359,6 +358,7 @@ The package exports everything from `awilix-router-core` as well as the followin
 * `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
 * `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
 * `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
+* `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
 * `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
 * `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
 
