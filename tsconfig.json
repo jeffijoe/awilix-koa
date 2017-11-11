@@ -1,6 +1,7 @@
 {
   "exclude": ["node_modules", "lib"],
   "compileOnSave": false,
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
     "outDir": "./lib",
     "strict": true,
