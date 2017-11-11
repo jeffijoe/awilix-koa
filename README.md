@@ -5,10 +5,24 @@
 [![devDependency Status](https://david-dm.org/jeffijoe/awilix-koa/dev-status.svg)](https://david-dm.org/jeffijoe/awilix-koa#info=devDependencies)
 [![Build Status](https://travis-ci.org/jeffijoe/awilix-koa.svg?branch=master)](https://travis-ci.org/jeffijoe/awilix-koa)
 [![Coverage Status](https://coveralls.io/repos/github/jeffijoe/awilix-koa/badge.svg?branch=master)](https://coveralls.io/github/jeffijoe/awilix-koa?branch=master)
+![Typings Included](https://img.shields.io/badge/typings-included-brightgreen.svg)
 
 Awilix helpers, router and scope-instantiating middleware for **Koa**. 🐨
 
 > ✨ **NEW IN V1**: [first-class router support with auto-loading!](#awesome-usage) 🚀
+
+# Table of Contents
+
+* [Installation](#installation)
+* [Basic Usage](#basic-usage)
+* [Awesome Usage](#awesome-usage)
+* [Why do I need it?](#why-do-i-need-it)
+  * [Manual](#manual)
+  * [Using awilix-koa](#using-awilix-koa)
+* [API](#api)
+* [Contributing](#contributing)
+  * [npm run scripts](#npm-run-scripts)
+* [Author](#author)
 
 # Installation
 
@@ -337,16 +351,24 @@ export default function (router) {
 
 That concludes the tutorial! Hope you find it useful, I know I have.
 
+# API
+
+The package exports everything from `awilix-router-core` as well as the following **Koa middleware factories**:
+
+* `scopePerRequest(container)`: creates a scope per request.
+* `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
+* `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
+* `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
+* `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
+* `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
+
 # Contributing
 
 ## `npm run` scripts
 
 * `npm run test`: Runs tests once
-* `npm run test-watch`: Runs tests in watch-mode
-* `npm run lint`: Lints the code once
-* `npm run lint-watch`: Lints the code in watch-mode
+* `npm run lint`: Lints + formats the code once
 * `npm run cover`: Runs code coverage using `istanbul`
-* `npm run coveralls`: Used by coveralls
 
 # Author
 

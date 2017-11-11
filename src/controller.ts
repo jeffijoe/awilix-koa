@@ -6,15 +6,11 @@ import {
   HttpVerbs,
   getStateAndTarget,
   IStateAndTarget,
-  IAwilixControllerBuilder,
-  Constructor
+  IAwilixControllerBuilder
 } from 'awilix-router-core'
-import { makeClassInvoker, makeInvoker } from './invokers'
+import { makeInvoker } from './invokers'
 import * as Router from 'koa-router'
 import * as compose from 'koa-compose'
-
-// TODO: Once Awilix is written in TS, use a proper import.
-const { isClass } = require('awilix/lib/utils')
 
 /**
  * Constructor type.
@@ -88,9 +84,7 @@ function _registerController(
       ;(router as any)[method](
         methodCfg.paths,
         ...methodCfg.beforeMiddleware,
-        (isClass(target)
-          ? makeClassInvoker(target as Constructor)
-          : makeInvoker(target))(methodName),
+        makeInvoker(target)(methodName),
         ...methodCfg.afterMiddleware
       )
     })

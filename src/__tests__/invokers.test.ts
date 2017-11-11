@@ -1,4 +1,4 @@
-import { makeInvoker, makeClassInvoker } from '../invokers'
+import { makeClassInvoker, makeFunctionInvoker } from '../invokers'
 import { createContainer, AwilixContainer } from 'awilix'
 
 describe('invokers', function() {
@@ -20,19 +20,21 @@ describe('invokers', function() {
     }
   })
 
-  describe('makeInvoker', function() {
-    it('calls the function with the cradle, then the method with the context and additional params', function() {
+  describe('makeFunctionInvoker', function() {
+    it('returns callable middleware', function() {
       function target({ param }: any) {
         factorySpy()
-        return {
-          method: (ctx: any) => {
+        const obj = {
+          method(ctx: any) {
             methodSpy()
+            expect(this).toBe(obj)
             return [ctx, param]
           }
         }
+        return obj
       }
 
-      const invoker = makeInvoker(target)
+      const invoker = makeFunctionInvoker(target)
 
       // Call it twice.
       invoker('method')(ctx)
@@ -45,7 +47,7 @@ describe('invokers', function() {
   })
 
   describe('makeClassInvoker', function() {
-    it('news up the class with the cradle, then calls the method with the context and additional params', function() {
+    it('returns callable middleware', function() {
       class Target {
         param: any
         constructor({ param }: any) {
@@ -55,6 +57,7 @@ describe('invokers', function() {
 
         method(ctx: any, additional: any) {
           methodSpy()
+          expect(this).toBeInstanceOf(Target)
           return [ctx, this.param, additional]
         }
       }
