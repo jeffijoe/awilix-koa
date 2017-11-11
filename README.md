@@ -85,11 +85,10 @@ router.get('/todos', api('find'))
 
 # Awesome Usage
 
-**As of `awilix-koa@1.0.0`**, we ship with `koa-router` bindings for [`awilix-router-core`](https://github.com/jeffijoe/awilix-router-core)! 
+**As of `awilix-koa@1.0.0`**, we ship with `koa-router` bindings for [`awilix-router-core`][awilix-router-core]! 
 This is cool because now your routing setup can be streamlined with first-class Awilix support!
 
 The Awilix-based router comes in 2 flavors: **a builder** and **ESNext decorators**.
-
 
 **`routes/todos-api.js`** - demos the builder pattern
 
@@ -161,6 +160,8 @@ app.use(loadControllers('routes/*.js', { cwd: __dirname }))
 
 app.listen(3000)
 ```
+
+Please see the [`awilix-router-core`][awilix-router-core] docs for information about the full API.
 
 # Why do I need it?
 
@@ -373,3 +374,6 @@ The package exports everything from `awilix-router-core` as well as the followin
 # Author
 
 Jeff Hansen - [@Jeffijoe](https://twitter.com/Jeffijoe)
+
+
+  [awilix-router-core]: https://github.com/jeffijoe/awilix-router-core

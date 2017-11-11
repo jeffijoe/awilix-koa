@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/jeffijoe/awilix-koa#readme",
   "dependencies": {
-    "awilix-router-core": "^1.2.0",
+    "awilix-router-core": "^1.2.3",
     "koa-compose": "^4.0.0",
     "koa-router": "^7.2.1",
     "tslib": "^1.8.0"

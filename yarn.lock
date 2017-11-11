@@ -396,9 +396,9 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-awilix-router-core@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/awilix-router-core/-/awilix-router-core-1.2.0.tgz#04c2473d96d57e2ca2fb84b63f98e4014fc30218"
+awilix-router-core@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/awilix-router-core/-/awilix-router-core-1.2.3.tgz#4b9f6b8b213be0ff5a6aa41b64bcd68fc8ad7a51"
   dependencies:
     glob "^7.1.2"
     tslib "^1.8.0"
