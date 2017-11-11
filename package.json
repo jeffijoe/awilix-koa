@@ -1,6 +1,6 @@
 {
   "name": "awilix-koa",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "Awilix helpers for Koa",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -11,19 +11,21 @@
     "build": "rimraf lib && tsc -p tsconfig.build.json",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "lint":
-      "tslint --project tsconfig.json --fix \"src/**/*.ts\" && prettier --write \"src/**/*.ts\"",
+    "lint": "tslint --project tsconfig.json --fix \"src/**/*.ts\" && prettier --write \"src/**/*.ts\"",
     "cover": "jest --coverage",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "precommit": "lint-staged && npm run build",
-    "semantic-release":
-      "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/jeffijoe/awilix-koa.git"
   },
-  "files": ["lib", "LICENSE.md", "README.md"],
+  "files": [
+    "lib",
+    "LICENSE.md",
+    "README.md"
+  ],
   "directories": {
     "lib": "lib"
   },
@@ -85,15 +87,25 @@
     "testEnvironment": "node",
     "mapCoverage": true,
     "testRegex": "(/__tests__/.*\\.(test|spec))\\.(ts|tsx|js)$",
-    "collectCoverageFrom": ["src/**/*.ts"],
-    "coveragePathIgnorePatterns": ["/node_modules/"],
-    "modulePaths": ["src"],
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "modulePaths": [
+      "src"
+    ],
     "coverageDirectory": "<rootDir>/coverage",
     "transform": {
       "\\.(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js",
       "\\.(js|jsx)": "babel-jest"
     },
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "globals": {}
   },
   "prettier": {
@@ -104,8 +116,14 @@
     "generateNotes": "@semantic-release/release-notes-generator",
     "analyzeCommits": {
       "path": "semantic-release-conventional-commits",
-      "majorTypes": ["major", "breaking"],
-      "minorTypes": ["feat", "minor"],
+      "majorTypes": [
+        "major",
+        "breaking"
+      ],
+      "minorTypes": [
+        "feat",
+        "minor"
+      ],
       "patchTypes": [
         "chore",
         "fix",
@@ -120,7 +138,9 @@
     }
   },
   "babel": {
-    "presets": ["latest"],
+    "presets": [
+      "latest"
+    ],
     "plugins": "transform-decorators-legacy"
   }
 }
