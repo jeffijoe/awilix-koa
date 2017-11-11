@@ -5,10 +5,24 @@
 [![devDependency Status](https://david-dm.org/jeffijoe/awilix-koa/dev-status.svg)](https://david-dm.org/jeffijoe/awilix-koa#info=devDependencies)
 [![Build Status](https://travis-ci.org/jeffijoe/awilix-koa.svg?branch=master)](https://travis-ci.org/jeffijoe/awilix-koa)
 [![Coverage Status](https://coveralls.io/repos/github/jeffijoe/awilix-koa/badge.svg?branch=master)](https://coveralls.io/github/jeffijoe/awilix-koa?branch=master)
-[![Code Climate](https://codeclimate.com/github/jeffijoe/awilix-koa/badges/gpa.svg)](https://codeclimate.com/github/jeffijoe/awilix-koa)
-[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+![Typings Included](https://img.shields.io/badge/typings-included-brightgreen.svg)
 
-Awilix 2 helpers and scope-instantiating middleware for **Koa 2**. :rocket:
+Awilix helpers, router and scope-instantiating middleware for **Koa**. 🐨
+
+> ✨ **NEW IN V1**: [first-class router support with auto-loading!](#awesome-usage) 🚀
+
+# Table of Contents
+
+* [Installation](#installation)
+* [Basic Usage](#basic-usage)
+* [Awesome Usage](#awesome-usage)
+* [Why do I need it?](#why-do-i-need-it)
+  * [Manual](#manual)
+  * [Using awilix-koa](#using-awilix-koa)
+* [API](#api)
+* [Contributing](#contributing)
+  * [npm run scripts](#npm-run-scripts)
+* [Author](#author)
 
 # Installation
 
@@ -18,7 +32,7 @@ npm install --save awilix-koa
 
 _Requires Node v6 or above_
 
-# Usage
+# Basic Usage
 
 Add the middleware to your Koa app.
 
@@ -50,7 +64,6 @@ app.use((ctx, next) => {
 Then in your route handlers...
 
 ```js
-// There's a makeClassInvoker for classes..
 const { makeInvoker } = require('awilix-koa')
 
 function makeAPI ({ todosService }) {
@@ -69,6 +82,86 @@ const api = makeInvoker(makeAPI)
 // for each request, giving you a scoped instance.
 router.get('/todos', api('find'))
 ```
+
+# Awesome Usage
+
+**As of `awilix-koa@1.0.0`**, we ship with `koa-router` bindings for [`awilix-router-core`][awilix-router-core]! 
+This is cool because now your routing setup can be streamlined with first-class Awilix support!
+
+The Awilix-based router comes in 2 flavors: **a builder** and **ESNext decorators**.
+
+**`routes/todos-api.js`** - demos the builder pattern
+
+```js
+import bodyParser from 'koa-bodyparser'
+import { authenticate } from './your-auth-middleware'
+import { createController } from 'awilix-koa' // or `awilix-router-core`
+
+const API = ({ todoService }) => ({
+  getTodo: async (ctx) => (ctx.body = await todoService.get(ctx.params.id)),
+  createTodo: async (ctx) => (ctx.body = await todoService.create(ctx.request.body))
+})
+
+export default createController(API)
+  .prefix('/todos') // Prefix all endpoints with `/todo`
+  .before([authenticate()]) // run authentication for all endpoints
+  .get('/:id', 'getTodo') // Maps `GET /todos/:id` to the `getTodo` function on the returned object from `API`
+  .post('', 'createTodo', { // Maps `POST /todos` to the `createTodo` function on the returned object from `API`
+    before: [bodyParser()] // Runs the bodyParser just for this endpoint
+  }) 
+```
+
+**`routes/users-api.js`** - demos the decorator pattern
+
+```js
+import bodyParser from 'koa-bodyparser'
+import { authenticate } from './your-auth-middleware'
+import { route, GET, POST, before } from 'awilix-koa' // or `awilix-router-core`
+
+@route('/users')
+export default class UserAPI {
+  constructor ({ userService }) {
+    this.userService = userService
+  }
+
+  @route('/:id')
+  @GET()
+  @before([authenticate()])
+  async getUser (ctx) {
+    ctx.body = await this.userService.get(ctx.params.id)
+  }
+
+  @POST()
+  @before([bodyParser()])
+  async createUser (ctx) {
+    ctx.body = await this.userService.create(ctx.request.body)
+  }
+}
+```
+
+**`server.js`**
+
+```js
+import Koa from 'koa'
+import { createContainer } from 'awilix'
+import { loadControllers, scopePerRequest } from 'awilix-koa'
+
+const app = new Koa()
+const container = createContainer()
+  .registerClass({
+    userService: /*...*/,
+    todoService: /*...*/
+  })
+// Loads all controllers in the `routes` folder 
+// relative to the current working directory.
+// This is a glob pattern.
+app.use(scopePerRequest(container))
+app.use(loadControllers('routes/*.js', { cwd: __dirname }))
+
+app.listen(3000)
+```
+
+Please see the [`awilix-router-core`][awilix-router-core] docs for information about the full API.
 
 # Why do I need it?
 
@@ -199,10 +292,10 @@ export default function (router) {
 In our route handler, do the following:
 
 ```js
-import { makeClassInvoker } from 'awilix-koa'
+import { makeInvoker } from 'awilix-koa'
 
 export default function (router) {
-  const api = makeClassInvoker(TodoAPI)
+  const api = makeInvoker(TodoAPI)
   router.get('/todos', api('getTodos'))
 }
 ```
@@ -237,7 +330,7 @@ app.use((ctx, next) => {
 })
 ```
 
-Now **that** is way simpler! If you are more of a factory-function aficionado like myself, you can use `makeInvoker` in place of `makeClassInvoker`:
+Now **that** is way simpler!
 
 ```js
 import { makeInvoker } from 'awilix-koa'
@@ -258,17 +351,29 @@ export default function (router) {
 
 That concludes the tutorial! Hope you find it useful, I know I have.
 
+# API
+
+The package exports everything from `awilix-router-core` as well as the following **Koa middleware factories**:
+
+* `scopePerRequest(container)`: creates a scope per request.
+* `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
+* `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
+* `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
+* `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
+* `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
+* `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
+
 # Contributing
 
 ## `npm run` scripts
 
 * `npm run test`: Runs tests once
-* `npm run test-watch`: Runs tests in watch-mode
-* `npm run lint`: Lints the code once
-* `npm run lint-watch`: Lints the code in watch-mode
+* `npm run lint`: Lints + formats the code once
 * `npm run cover`: Runs code coverage using `istanbul`
-* `npm run coveralls`: Used by coveralls
 
 # Author
 
 Jeff Hansen - [@Jeffijoe](https://twitter.com/Jeffijoe)
+
+
+  [awilix-router-core]: https://github.com/jeffijoe/awilix-router-core
