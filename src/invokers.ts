@@ -1,10 +1,12 @@
 import {
   asFunction,
-  Registration,
+  Resolver,
   AwilixContainer,
-  RegistrationOptions,
+  ResolverOptions,
   Constructor,
-  asClass
+  asClass,
+  ClassOrFunctionReturning,
+  FunctionReturning
 } from 'awilix'
 
 // TODO: Use proper import after Awilix v3 rewrite to TS.
@@ -20,13 +22,15 @@ const { isClass } = require('awilix/lib/utils')
  * @param opts
  * Resolver options for the class/function.
  */
-export function makeInvoker(
-  functionOrClass: Function | Constructor<any>,
-  opts?: RegistrationOptions
+export function makeInvoker<T>(
+  functionOrClass: ClassOrFunctionReturning<T>,
+  opts?: ResolverOptions<T>
 ) {
   return isClass(functionOrClass)
-    ? makeClassInvoker(functionOrClass as Constructor<any>, opts)
-    : makeFunctionInvoker(functionOrClass, opts)
+    ? /*tslint:disable-next-line*/
+      makeClassInvoker(functionOrClass as Constructor<T>, opts)
+    : /*tslint:disable-next-line*/
+      makeFunctionInvoker(functionOrClass as FunctionReturning<T>, opts)
 }
 
 /**
@@ -39,7 +43,10 @@ export function makeInvoker(
  * @param, {Function} fn
  * @return {(methodToInvoke: string) => (ctx) => void}
  */
-export function makeFunctionInvoker(fn: Function, opts?: RegistrationOptions) {
+export function makeFunctionInvoker<T>(
+  fn: FunctionReturning<T>,
+  opts?: ResolverOptions<T>
+) {
   return makeResolverInvoker(asFunction(fn, opts))
 }
 
@@ -49,9 +56,9 @@ export function makeFunctionInvoker(fn: Function, opts?: RegistrationOptions) {
  * @param  {Class} Class
  * @return {(methodToInvoke: string) => (ctx) => void}
  */
-export function makeClassInvoker(
-  Class: Constructor<any>,
-  opts?: RegistrationOptions
+export function makeClassInvoker<T>(
+  Class: Constructor<T>,
+  opts?: ResolverOptions<T>
 ) {
   return makeResolverInvoker(asClass(Class, opts))
 }
@@ -66,7 +73,7 @@ export function makeClassInvoker(
  * @param, {Resolver} resolver
  * @return {(methodToInvoke: string) => (ctx) => void}
  */
-export function makeResolverInvoker(resolver: Registration) {
+export function makeResolverInvoker<T>(resolver: Resolver<T>) {
   /**
    * 2nd step is to create a method to invoke on the result
    * of the resolver.

@@ -1,5 +1,5 @@
 import { makeClassInvoker, makeFunctionInvoker } from '../invokers'
-import { createContainer, AwilixContainer } from 'awilix'
+import { createContainer, AwilixContainer, asValue } from 'awilix'
 
 describe('invokers', function() {
   let container: AwilixContainer
@@ -12,7 +12,7 @@ describe('invokers', function() {
     constructorSpy = jest.fn()
     methodSpy = jest.fn()
     container = createContainer()
-    container.registerValue('param', 42)
+    container.register('param', asValue(42))
     ctx = {
       state: {
         container

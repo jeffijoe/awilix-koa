@@ -2,7 +2,7 @@ import * as Koa from 'koa'
 import * as http from 'http'
 import { loadControllers, controller } from '../controller'
 import { scopePerRequest } from '../scope-per-request'
-import { createContainer } from 'awilix'
+import { createContainer, asFunction } from 'awilix'
 import { route, GET, createController } from '../'
 
 const AssertRequest = require('assert-request')
@@ -58,8 +58,8 @@ describe('controller registration', () => {
 
 function createServer(): Promise<[http.Server, any]> {
   const app = new Koa()
-  const container = createContainer().registerFunction({
-    service: () => ({ get: (message: string) => ({ message }) })
+  const container = createContainer().register({
+    service: asFunction(() => ({ get: (message: string) => ({ message }) }))
   })
   app.use(scopePerRequest(container))
   app.use(loadControllers('__fixtures__/1/*.*'))

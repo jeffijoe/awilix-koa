@@ -1,7 +1,7 @@
 import * as Koa from 'koa'
 import * as KoaRouter from 'koa-router'
 import { scopePerRequest, makeInvoker, makeClassInvoker } from '../'
-import { createContainer, asClass } from 'awilix'
+import { createContainer, asClass, asFunction } from 'awilix'
 const AssertRequest = require('assert-request')
 
 class TestService {
@@ -40,7 +40,12 @@ function createServer(spies: any) {
       testService: asClass(TestService).scoped()
     })
     // These will be registered as transient.
-    .registerFunction(spies)
+    .register(
+      Object.keys(spies).reduce((obj: any, key) => {
+        obj[key] = asFunction(spies[key])
+        return obj
+      }, {})
+    )
   app.use(scopePerRequest(container))
 
   const fnAPI = makeInvoker(testFactoryFunction)

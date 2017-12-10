@@ -84,7 +84,8 @@ function _registerController(
       ;(router as any)[method](
         methodCfg.paths,
         ...methodCfg.beforeMiddleware,
-        makeInvoker(target)(methodName),
+        /*tslint:disable-next-line*/
+        makeInvoker(target as any)(methodName),
         ...methodCfg.afterMiddleware
       )
     })
