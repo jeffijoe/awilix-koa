@@ -11,7 +11,8 @@
     "build": "rimraf lib && tsc -p tsconfig.build.json",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "lint": "tslint --project tsconfig.json --fix \"src/**/*.ts\" && prettier --write \"src/**/*.ts\"",
+    "lint":
+      "tslint --project tsconfig.json --fix \"src/**/*.ts\" && prettier --write \"src/**/*.ts\"",
     "cover": "jest --coverage",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "precommit": "lint-staged && npm run build",
@@ -21,11 +22,7 @@
     "type": "git",
     "url": "https://github.com/jeffijoe/awilix-koa.git"
   },
-  "files": [
-    "lib",
-    "LICENSE.md",
-    "README.md"
-  ],
+  "files": ["lib", "LICENSE.md", "README.md"],
   "directories": {
     "lib": "lib"
   },
@@ -66,7 +63,6 @@
     "prettier": "^1.9.2",
     "rimraf": "^2.6.1",
     "semantic-release": "^11.0.2",
-    "semantic-release-conventional-commits": "^1.2.0",
     "ts-jest": "^22.0.0",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.6.0",
@@ -87,25 +83,15 @@
     "testEnvironment": "node",
     "mapCoverage": true,
     "testRegex": "(/__tests__/.*\\.(test|spec))\\.(ts|tsx|js)$",
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "modulePaths": [
-      "src"
-    ],
+    "collectCoverageFrom": ["src/**/*.ts"],
+    "coveragePathIgnorePatterns": ["/node_modules/"],
+    "modulePaths": ["src"],
     "coverageDirectory": "<rootDir>/coverage",
     "transform": {
       "\\.(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js",
       "\\.(js|jsx)": "babel-jest"
     },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
     "globals": {}
   },
   "prettier": {
@@ -113,34 +99,10 @@
     "singleQuote": true
   },
   "release": {
-    "generateNotes": "@semantic-release/release-notes-generator",
-    "analyzeCommits": {
-      "path": "semantic-release-conventional-commits",
-      "majorTypes": [
-        "major",
-        "breaking"
-      ],
-      "minorTypes": [
-        "feat",
-        "minor"
-      ],
-      "patchTypes": [
-        "chore",
-        "fix",
-        "patch",
-        "docs",
-        "test",
-        "style",
-        "refactor"
-      ],
-      "mergePattern": "/^Merge pull request #(\\d+) from (.*)$/",
-      "mergeCorrespondence": "['id', 'source']"
-    }
+    "generateNotes": "@semantic-release/release-notes-generator"
   },
   "babel": {
-    "presets": [
-      "latest"
-    ],
+    "presets": ["latest"],
     "plugins": "transform-decorators-legacy"
   }
 }
