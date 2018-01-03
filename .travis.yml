@@ -21,10 +21,9 @@ before_script:
 # Runs the coverage script (which runs the tests)
 script: npm run coveralls
 
-# Code coverage
 after_success:
-  - npm run semantic-release
-
+  - npm install -g travis-deploy-once@4
+  - travis-deploy-once "npm run semantic-release"
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
