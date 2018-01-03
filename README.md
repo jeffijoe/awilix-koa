@@ -66,9 +66,9 @@ Then in your route handlers...
 ```js
 const { makeInvoker } = require('awilix-koa')
 
-function makeAPI ({ todosService }) {
+function makeAPI({ todosService }) {
   return {
-    find: (ctx) => {
+    find: ctx => {
       return todosService.find().then(result => {
         ctx.body = result
       })
@@ -85,7 +85,7 @@ router.get('/todos', api('find'))
 
 # Awesome Usage
 
-**As of `awilix-koa@1.0.0`**, we ship with `koa-router` bindings for [`awilix-router-core`][awilix-router-core]! 
+**As of `awilix-koa@1.0.0`**, we ship with `koa-router` bindings for [`awilix-router-core`][awilix-router-core]!
 This is cool because now your routing setup can be streamlined with first-class Awilix support!
 
 The Awilix-based router comes in 2 flavors: **a builder** and **ESNext decorators**.
@@ -98,17 +98,19 @@ import { authenticate } from './your-auth-middleware'
 import { createController } from 'awilix-koa' // or `awilix-router-core`
 
 const API = ({ todoService }) => ({
-  getTodo: async (ctx) => (ctx.body = await todoService.get(ctx.params.id)),
-  createTodo: async (ctx) => (ctx.body = await todoService.create(ctx.request.body))
+  getTodo: async ctx => (ctx.body = await todoService.get(ctx.params.id)),
+  createTodo: async ctx =>
+    (ctx.body = await todoService.create(ctx.request.body))
 })
 
 export default createController(API)
   .prefix('/todos') // Prefix all endpoints with `/todo`
   .before([authenticate()]) // run authentication for all endpoints
   .get('/:id', 'getTodo') // Maps `GET /todos/:id` to the `getTodo` function on the returned object from `API`
-  .post('', 'createTodo', { // Maps `POST /todos` to the `createTodo` function on the returned object from `API`
+  .post('', 'createTodo', {
+    // Maps `POST /todos` to the `createTodo` function on the returned object from `API`
     before: [bodyParser()] // Runs the bodyParser just for this endpoint
-  }) 
+  })
 ```
 
 **`routes/users-api.js`** - demos the decorator pattern
@@ -120,20 +122,20 @@ import { route, GET, POST, before } from 'awilix-koa' // or `awilix-router-core`
 
 @route('/users')
 export default class UserAPI {
-  constructor ({ userService }) {
+  constructor({ userService }) {
     this.userService = userService
   }
 
   @route('/:id')
   @GET()
   @before([authenticate()])
-  async getUser (ctx) {
+  async getUser(ctx) {
     ctx.body = await this.userService.get(ctx.params.id)
   }
 
   @POST()
   @before([bodyParser()])
-  async createUser (ctx) {
+  async createUser(ctx) {
     ctx.body = await this.userService.create(ctx.request.body)
   }
 }
@@ -153,7 +155,7 @@ const container = createContainer()
     todoService: /*...*/
   })
 app.use(scopePerRequest(container))
-// Loads all controllers in the `routes` folder 
+// Loads all controllers in the `routes` folder
 // relative to the current working directory.
 // This is a glob pattern.
 app.use(loadControllers('routes/*.js', { cwd: __dirname }))
@@ -205,7 +207,7 @@ This is how you would have to do it without Awilix at all.
 ```js
 import db from './db'
 
-router.get('/todos', (ctx) => {
+router.get('/todos', ctx => {
   // We need a new instance for each request,
   // else the currentUser trick wont work.
   const api = new TodoAPI({
@@ -258,8 +260,8 @@ app.use((ctx, next) => {
 Okay! Let's try setting up that API again!
 
 ```js
-export default function (router) {
-  router.get('/todos', (ctx) => {
+export default function(router) {
+  router.get('/todos', ctx => {
     // We have our scope available!
     const api = new TodoAPI(ctx.state.container.cradle) // Awilix magic!
     return api.getTodos(ctx)
@@ -270,13 +272,13 @@ export default function (router) {
 A lot cleaner, but we can make this even shorter!
 
 ```js
-export default function (router) {
+export default function(router) {
   // Just invoke `api` with the method name and
   // you've got yourself a middleware that instantiates
   // the API and calls the method.
-  const api = (methodName) => {
+  const api = methodName => {
     // create our handler
-    return function (ctx) {
+    return function(ctx) {
       const controller = new TodoAPI(ctx.state.container.cradle)
       return controller[method](ctx)
     }
@@ -294,7 +296,7 @@ In our route handler, do the following:
 ```js
 import { makeInvoker } from 'awilix-koa'
 
-export default function (router) {
+export default function(router) {
   const api = makeInvoker(TodoAPI)
   router.get('/todos', api('getTodos'))
 }
@@ -309,12 +311,15 @@ import { scopePerRequest } from 'awilix-koa'
 const container = createContainer()
 
 // The `TodosService` lives in services/TodosService
-container.loadModules([
-  ['services/*.js', Lifetime.SCOPED] // shortcut to make all services scoped
-], {
-  // we want `TodosService` to be registered as `todosService`.
-  formatName: 'camelCase'
-})
+container.loadModules(
+  [
+    ['services/*.js', Lifetime.SCOPED] // shortcut to make all services scoped
+  ],
+  {
+    // we want `TodosService` to be registered as `todosService`.
+    formatName: 'camelCase'
+  }
+)
 
 // imagination is a wonderful thing.
 app.use(someAuthenticationMethod())
@@ -335,15 +340,15 @@ Now **that** is way simpler!
 ```js
 import { makeInvoker } from 'awilix-koa'
 
-function makeTodoAPI ({ todosService }) {
+function makeTodoAPI({ todosService }) {
   return {
-    getTodos: (ctx) => {
+    getTodos: ctx => {
       return todosService.getTodos().then(todos => ctx.ok(todos))
     }
   }
 }
 
-export default function (router) {
+export default function(router) {
   const api = makeInvoker(makeTodoAPI)
   router.get('/api/todos', api('getTodos'))
 }
@@ -362,6 +367,14 @@ The package exports everything from `awilix-router-core` as well as the followin
 * `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
 * `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
 * `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
+* `inject(middlewareFactory)`: resolves the middleware per request.
+  ```js
+  app.use(
+    inject(({ userService }) => (ctx, next) => {
+      /**/
+    })
+  )
+  ```
 
 # Contributing
 
@@ -375,5 +388,4 @@ The package exports everything from `awilix-router-core` as well as the followin
 
 Jeff Hansen - [@Jeffijoe](https://twitter.com/Jeffijoe)
 
-
-  [awilix-router-core]: https://github.com/jeffijoe/awilix-router-core
+[awilix-router-core]: https://github.com/jeffijoe/awilix-router-core
