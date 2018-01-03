@@ -39,7 +39,7 @@ export function controller(
     _registerController(router, getStateAndTarget(ControllerClass))
   }
 
-  return compose([router.routes(), router.allowedMethods()])
+  return compose([router.routes(), router.allowedMethods()]) as any
 }
 
 /**
@@ -55,7 +55,7 @@ export function loadControllers(pattern: string, opts?: IOptions): Middleware {
     absolute: true
   }).forEach(_registerController.bind(null, router))
 
-  return compose([router.routes(), router.allowedMethods()])
+  return compose([router.routes(), router.allowedMethods()]) as any
 }
 
 /**

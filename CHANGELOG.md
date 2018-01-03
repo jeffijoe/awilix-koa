@@ -1,5 +1,13 @@
 # Changelog
 
+# 2.1.0
+
+* Add `inject` middleware factory.
+
+# 2.0.0
+
+* Support Awilix v3.
+
 ## 1.0.0
 
 * Rewritten in TypeScript.

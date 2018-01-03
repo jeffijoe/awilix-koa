@@ -8,9 +8,7 @@ import {
   ClassOrFunctionReturning,
   FunctionReturning
 } from 'awilix'
-
-// TODO: Use proper import after Awilix v3 rewrite to TS.
-const { isClass } = require('awilix/lib/utils')
+import { isClass } from 'awilix/lib/utils'
 
 /**
  * Creates either a function invoker or a class invoker, based on whether
@@ -95,4 +93,35 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
       return resolved[methodToInvoke](ctx, ...rest)
     }
   }
+}
+
+/**
+ * Injects dependencies into the middleware factory when the middleware is invoked.
+ *
+ * @param factory
+ */
+export function inject(factory: ClassOrFunctionReturning<any> | Resolver<any>) {
+  const resolver = getResolver(factory)
+  /**
+   * The invoker middleware.
+   */
+  return function middlewareFactoryHandler(ctx: any, ...rest: any[]) {
+    const container: AwilixContainer = ctx.state.container
+    const resolved: any = container.build(resolver)
+    return resolved(ctx, ...rest)
+  }
+}
+
+/**
+ * Wraps or returns a resolver.
+ */
+function getResolver<T>(
+  arg: ClassOrFunctionReturning<T> | Resolver<T>
+): Resolver<T> {
+  if (typeof arg === 'function') {
+    /*tslint:disable-next-line*/
+    return asFunction(arg as any)
+  }
+
+  return arg
 }

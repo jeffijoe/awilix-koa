@@ -1,5 +1,5 @@
-import { makeClassInvoker, makeFunctionInvoker } from '../invokers'
-import { createContainer, AwilixContainer, asValue } from 'awilix'
+import { makeClassInvoker, makeFunctionInvoker, inject } from '../invokers'
+import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
 
 describe('invokers', function() {
   let container: AwilixContainer
@@ -71,6 +71,50 @@ describe('invokers', function() {
       expect(result).toEqual([ctx, 42, 'hello'])
       expect(constructorSpy).toHaveBeenCalledTimes(2)
       expect(methodSpy).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  describe('inject', () => {
+    describe('passing a function', () => {
+      it('converts function to resolver returns callable middleware', () => {
+        const converted = inject(({ param }: any) => {
+          constructorSpy()
+          return (ctx: any, additional: any) => {
+            methodSpy()
+            return [ctx, param, additional]
+          }
+        })
+
+        // Call it twice.
+        converted(ctx, 'hello')
+        const result = converted(ctx, 'hello')
+
+        expect(result).toEqual([ctx, 42, 'hello'])
+        expect(constructorSpy).toHaveBeenCalledTimes(2)
+        expect(methodSpy).toHaveBeenCalledTimes(2)
+      })
+    })
+
+    describe('passing a resolver', () => {
+      it('converts function to resolver returns callable middleware', () => {
+        const converted = inject(
+          asFunction(({ param }: any) => {
+            constructorSpy()
+            return (ctx: any, additional: any) => {
+              methodSpy()
+              return [ctx, param, additional]
+            }
+          })
+        )
+
+        // Call it twice.
+        converted(ctx, 'hello')
+        const result = converted(ctx, 'hello')
+
+        expect(result).toEqual([ctx, 42, 'hello'])
+        expect(constructorSpy).toHaveBeenCalledTimes(2)
+        expect(methodSpy).toHaveBeenCalledTimes(2)
+      })
     })
   })
 })
