@@ -37,15 +37,15 @@ _Requires Node v6 or above_
 Add the middleware to your Koa app.
 
 ```js
-const { createContainer } = require('awilix')
+const { asClass, asValue, createContainer} = require('awilix')
 const { scopePerRequest } = require('awilix-koa')
 
 const container = createContainer()
-container.registerClass({
+container.register({
   // Scoped lifetime = new instance per request
   // Imagine the TodosService needs a `user`.
   // class TodosService { constructor({ user }) { } }
-  todosService: [TodosService, Lifetime.SCOPED]
+  todosService: asClass(TodosService).scoped()
 })
 
 // Add the middleware, passing it your Awilix container.
@@ -54,8 +54,8 @@ app.use(scopePerRequest(container))
 
 // Now you can add request-specific data to the scope.
 app.use((ctx, next) => {
-  ctx.state.container.registerValue({
-    user: ctx.state.user // from some authentication middleware..
+  ctx.state.container.register({
+    user: asValue(ctx.state.user) // from some authentication middleware..
   })
   return next()
 })
@@ -145,15 +145,15 @@ export default class UserAPI {
 
 ```js
 import Koa from 'koa'
-import { createContainer } from 'awilix'
+import { asClass, createContainer } from 'awilix'
 import { loadControllers, scopePerRequest } from 'awilix-koa'
 
 const app = new Koa()
 const container = createContainer()
-  .registerClass({
-    userService: /*...*/,
-    todoService: /*...*/
-  })
+  .register({
+    userService: asClass(/*...*/),
+    todoService: asClass(/*...*/)
+})
 app.use(scopePerRequest(container))
 // Loads all controllers in the `routes` folder
 // relative to the current working directory.
@@ -226,7 +226,7 @@ router.get('/todos', ctx => {
 Let's do this with Awilix instead. We'll need a bit of setup code.
 
 ```js
-import { createContainer, Lifetime } from 'awilix'
+import { asValue, createContainer, Lifetime } from 'awilix'
 
 const container = createContainer()
 
@@ -234,7 +234,7 @@ const container = createContainer()
 container.loadModules(['services/*.js'], {
   // we want `TodosService` to be registered as `todosService`.
   formatName: 'camelCase',
-  registrationOptions: {
+  resolverOptions: {
     // We want instances to be scoped to the Koa request.
     // We need to set that up.
     lifetime: Lifetime.SCOPED
@@ -250,8 +250,8 @@ app.use((ctx, next) => {
   // We want a new scope for each request!
   ctx.state.container = container.createScope()
   // The `TodosService` needs `currentUser`
-  ctx.state.container.registerValue({
-    currentUser: ctx.state.user // from auth middleware.. IMAGINATION!! :D
+  ctx.state.container.register({
+    currentUser: asValue(ctx.state.user) // from auth middleware.. IMAGINATION!! :D
   })
   return next()
 })
@@ -305,7 +305,7 @@ export default function(router) {
 And in your Koa application setup:
 
 ```js
-import { createContainer, Lifetime } from 'awilix'
+import { asValue, createContainer, Lifetime } from 'awilix'
 import { scopePerRequest } from 'awilix-koa'
 
 const container = createContainer()
@@ -329,8 +329,8 @@ app.use(scopePerRequest(container))
 app.use((ctx, next) => {
   // We still want to register the user!
   // ctx.state.container is a scope!
-  ctx.state.container.registerValue({
-    currentUser: ctx.state.user // from auth middleware.. IMAGINATION!! :D
+  ctx.state.container.register({
+    currentUser: asValue(ctx.state.user) // from auth middleware.. IMAGINATION!! :D
   })
 })
 ```
