@@ -73,6 +73,8 @@ function _registerController(
   }
 
   const { state, target } = stateAndTarget
+  /*tslint:disable-next-line*/
+  const invoker = makeInvoker(target as any)
   const rolledUp = rollUpState(state)
   rolledUp.forEach((methodCfg, methodName) => {
     methodCfg.verbs.forEach(httpVerb => {
@@ -84,8 +86,7 @@ function _registerController(
       ;(router as any)[method](
         methodCfg.paths,
         ...methodCfg.beforeMiddleware,
-        /*tslint:disable-next-line*/
-        makeInvoker(target as any)(methodName),
+        invoker(methodName),
         ...methodCfg.afterMiddleware
       )
     })
