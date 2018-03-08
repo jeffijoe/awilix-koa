@@ -1,5 +1,10 @@
 # Changelog
 
+# 2.1.1
+
+* Optimize use of `makeInvoker` in `controller`.
+* Use TypeScript 2.7's `esModuleInterop` flag.
+
 # 2.1.0
 
 * Add `inject` middleware factory.

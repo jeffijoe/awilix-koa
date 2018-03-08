@@ -9,8 +9,8 @@ import {
   IAwilixControllerBuilder
 } from 'awilix-router-core'
 import { makeInvoker } from './invokers'
-import * as Router from 'koa-router'
-import * as compose from 'koa-compose'
+import Router from 'koa-router'
+import compose from 'koa-compose'
 
 /**
  * Constructor type.

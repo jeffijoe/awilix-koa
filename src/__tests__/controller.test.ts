@@ -1,4 +1,4 @@
-import * as Koa from 'koa'
+import Koa from 'koa'
 import * as http from 'http'
 import { loadControllers, controller } from '../controller'
 import { scopePerRequest } from '../scope-per-request'
