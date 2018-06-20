@@ -1,6 +1,6 @@
 # awilix-koa
 
-[![npm version](https://badge.fury.io/js/YOUR-NPM-MODULE.svg)](https://badge.fury.io/js/awilix-koa)
+[![npm version](https://badge.fury.io/js/awilix-koa.svg)](https://badge.fury.io/js/awilix-koa)
 [![Dependency Status](https://david-dm.org/jeffijoe/awilix-koa.svg)](https://david-dm.org/jeffijoe/awilix-koa)
 [![devDependency Status](https://david-dm.org/jeffijoe/awilix-koa/dev-status.svg)](https://david-dm.org/jeffijoe/awilix-koa#info=devDependencies)
 [![Build Status](https://travis-ci.org/jeffijoe/awilix-koa.svg?branch=master)](https://travis-ci.org/jeffijoe/awilix-koa)
