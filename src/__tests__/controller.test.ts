@@ -4,6 +4,7 @@ import { loadControllers, controller } from '../controller'
 import { scopePerRequest } from '../scope-per-request'
 import { createContainer, asFunction } from 'awilix'
 import { route, GET, createController } from '../'
+import { AddressInfo } from 'net'
 
 const AssertRequest = require('assert-request')
 
@@ -76,7 +77,7 @@ function createServer(): Promise<[http.Server, any]> {
   )
   return new Promise(resolve => {
     const server = app.listen(() => {
-      const addr = server.address()
+      const addr = server.address() as AddressInfo
       resolve([server, AssertRequest(`http://127.0.0.1:${addr.port}`)])
     })
   })
