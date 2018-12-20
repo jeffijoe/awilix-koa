@@ -9,20 +9,18 @@
 
 Awilix helpers, router and scope-instantiating middleware for **Koa**. 🐨
 
-> ✨ **NEW IN V1**: [first-class router support with auto-loading!](#awesome-usage) 🚀
-
 # Table of Contents
 
-* [Installation](#installation)
-* [Basic Usage](#basic-usage)
-* [Awesome Usage](#awesome-usage)
-* [Why do I need it?](#why-do-i-need-it)
-  * [Manual](#manual)
-  * [Using awilix-koa](#using-awilix-koa)
-* [API](#api)
-* [Contributing](#contributing)
-  * [npm run scripts](#npm-run-scripts)
-* [Author](#author)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Awesome Usage](#awesome-usage)
+- [Why do I need it?](#why-do-i-need-it)
+  - [Manual](#manual)
+  - [Using awilix-koa](#using-awilix-koa)
+- [API](#api)
+- [Contributing](#contributing)
+  - [npm run scripts](#npm-run-scripts)
+- [Author](#author)
 
 # Installation
 
@@ -37,7 +35,7 @@ _Requires Node v6 or above_
 Add the middleware to your Koa app.
 
 ```js
-const { asClass, asValue, createContainer} = require('awilix')
+const { asClass, asValue, createContainer } = require('awilix')
 const { scopePerRequest } = require('awilix-koa')
 
 const container = createContainer()
@@ -149,10 +147,9 @@ import { asClass, createContainer } from 'awilix'
 import { loadControllers, scopePerRequest } from 'awilix-koa'
 
 const app = new Koa()
-const container = createContainer()
-  .register({
-    userService: asClass(/*...*/),
-    todoService: asClass(/*...*/)
+const container = createContainer().register({
+  userService: asClass(/*...*/),
+  todoService: asClass(/*...*/)
 })
 app.use(scopePerRequest(container))
 // Loads all controllers in the `routes` folder
@@ -360,14 +357,14 @@ That concludes the tutorial! Hope you find it useful, I know I have.
 
 The package exports everything from `awilix-router-core` as well as the following **Koa middleware factories**:
 
-* `scopePerRequest(container)`: creates a scope per request.
-* `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
-* `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
-* `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
-* `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
-* `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
-* `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
-* `inject(middlewareFactory)`: resolves the middleware per request.
+- `scopePerRequest(container)`: creates a scope per request.
+- `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
+- `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
+- `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
+- `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
+- `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
+- `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
+- `inject(middlewareFactory)`: resolves the middleware per request.
   ```js
   app.use(
     inject(({ userService }) => (ctx, next) => {
@@ -380,9 +377,9 @@ The package exports everything from `awilix-router-core` as well as the followin
 
 ## `npm run` scripts
 
-* `npm run test`: Runs tests once
-* `npm run lint`: Lints + formats the code once
-* `npm run cover`: Runs code coverage using `istanbul`
+- `npm run test`: Runs tests once
+- `npm run lint`: Lints + formats the code once
+- `npm run cover`: Runs code coverage using `istanbul`
 
 # Author
 
