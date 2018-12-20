@@ -3,7 +3,7 @@
 # 3.0.1
 
 - Update packages
-- Add an assertion to `makeInvoker`
+- Add a `methodToInvoke` assertion in `makeInvoker`
 
 # 3.0.0
 
