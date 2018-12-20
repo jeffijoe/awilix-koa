@@ -1,5 +1,10 @@
 # Changelog
 
+# 3.0.1
+
+- Update packages
+- Add an assertion to `makeInvoker`
+
 # 3.0.0
 
 - Update `peerDependencies` to `awilix@4.0.0`
