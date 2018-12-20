@@ -9,6 +9,8 @@ import {
   FunctionReturning
 } from 'awilix'
 import { isClass } from 'awilix/lib/utils'
+import { MethodName } from 'awilix-router-core'
+import assert from 'assert'
 
 /**
  * Creates either a function invoker or a class invoker, based on whether
@@ -76,10 +78,10 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
    * 2nd step is to create a method to invoke on the result
    * of the resolver.
    *
-   * @param  {string} methodToInvoke
+   * @param  {MethodName} methodToInvoke
    * @return {(ctx) => void}
    */
-  return function makeMemberInvoker(methodToInvoke: string) {
+  return function makeMemberInvoker(methodToInvoke: MethodName) {
     /**
      * The invoker middleware.
      *
@@ -90,7 +92,13 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
     return function memberInvoker(ctx: any, ...rest: any[]) {
       const container: AwilixContainer = ctx.state.container
       const resolved: any = container.build(resolver)
-      return resolved[methodToInvoke](ctx, ...rest)
+      assert(
+        methodToInvoke,
+        `methodToInvoke must be a valid method type, such as string, number or symbol, but was ${String(
+          methodToInvoke
+        )}`
+      )
+      return resolved[methodToInvoke!](ctx, ...rest)
     }
   }
 }
