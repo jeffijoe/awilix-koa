@@ -1,5 +1,9 @@
 # Changelog
 
+# 3.1.0
+
+- Update `awilix-router-core` to v1.5.0
+
 # 3.0.1
 
 - Update packages
