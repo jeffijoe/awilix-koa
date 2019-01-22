@@ -37,17 +37,17 @@
   },
   "homepage": "https://github.com/jeffijoe/awilix-koa#readme",
   "dependencies": {
-    "awilix-router-core": "^1.5.0",
+    "awilix-router-core": "^1.6.1",
     "koa-compose": "^4.1.0",
     "koa-router": "^7.4.0"
   },
   "devDependencies": {
     "@semantic-release/release-notes-generator": "^7.1.4",
     "@types/glob": "^7.1.1",
-    "@types/jest": "^23.3.12",
+    "@types/jest": "^23.3.13",
     "@types/koa": "^2.0.48",
     "@types/koa-compose": "^3.2.2",
-    "@types/koa-router": "^7.0.37",
+    "@types/koa-router": "^7.0.38",
     "@types/node": "^10.12.18",
     "@types/prettier": "^1.15.2",
     "@types/rimraf": "^2.0.2",
@@ -61,14 +61,14 @@
     "jest": "^23.6.0",
     "koa": "^2.6.2",
     "lint-staged": "^8.1.0",
-    "prettier": "^1.15.3",
+    "prettier": "^1.16.1",
     "rimraf": "^2.6.3",
     "semantic-release": "^15.13.3",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.4"
   },
   "peerDependencies": {
     "awilix": "^4.0.0"
