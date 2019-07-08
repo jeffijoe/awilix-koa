@@ -9,8 +9,8 @@ import {
   IAwilixControllerBuilder
 } from 'awilix-router-core'
 import { makeInvoker } from './invokers'
-import Router from 'koa-router'
 import compose from 'koa-compose'
+const Router = require('@koa/router')
 
 /**
  * Constructor type.
@@ -65,7 +65,7 @@ export function loadControllers(pattern: string, opts?: IOptions): Middleware {
  * @param ControllerClass
  */
 function _registerController(
-  router: Router,
+  router: any,
   stateAndTarget: IStateAndTarget | null
 ): void {
   if (!stateAndTarget) {
@@ -83,7 +83,7 @@ function _registerController(
         method = 'all'
       }
 
-      ;(router as any)[method](
+      router[method](
         methodCfg.paths,
         ...methodCfg.beforeMiddleware,
         invoker(methodName),

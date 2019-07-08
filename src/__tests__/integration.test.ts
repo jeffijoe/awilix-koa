@@ -1,7 +1,7 @@
 import Koa from 'koa'
-import KoaRouter from 'koa-router'
 import { scopePerRequest, makeInvoker, makeClassInvoker } from '../'
 import { createContainer, asClass, asFunction } from 'awilix'
+const KoaRouter = require('@koa/router')
 const AssertRequest = require('assert-request')
 
 class TestService {
@@ -52,7 +52,7 @@ function createServer(spies: any) {
   const classAPI = makeClassInvoker(TestClass)
   router.get('/function', fnAPI('handle'))
   router.get('/class', classAPI('handle'))
-  app.use(router.routes() as any)
+  app.use(router.routes())
 
   return new Promise((resolve, reject) => {
     let server: any
