@@ -8,9 +8,9 @@ notifications:
 
 # Add additional versions here as appropriate.
 node_js:
-  - "stable"
-  - "9"
-  - "8"
+  - 'stable'
+  - '10'
+  - '8'
 
 # Lint errors should trigger a failure.
 before_script:
