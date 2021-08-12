@@ -6,7 +6,7 @@ import {
   Constructor,
   asClass,
   ClassOrFunctionReturning,
-  FunctionReturning
+  FunctionReturning,
 } from 'awilix'
 import { isClass } from 'awilix/lib/utils'
 import { MethodName } from 'awilix-router-core'
@@ -98,7 +98,7 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
           methodToInvoke
         )}`
       )
-      return resolved[methodToInvoke!](ctx, ...rest)
+      return resolved[methodToInvoke](ctx, ...rest)
     }
   }
 }

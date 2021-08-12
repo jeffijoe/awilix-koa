@@ -22,12 +22,12 @@ class TestClass {
 
 function testFactoryFunction({
   testFactoryFunctionInvocation,
-  testService
+  testService,
 }: any) {
   return {
     handle(ctx: any) {
       ctx.body = { success: true }
-    }
+    },
   }
 }
 
@@ -37,7 +37,7 @@ function createServer(spies: any) {
 
   const container = createContainer()
     .register({
-      testService: asClass(TestService).scoped()
+      testService: asClass(TestService).scoped(),
     })
     // These will be registered as transient.
     .register(
@@ -60,38 +60,38 @@ function createServer(spies: any) {
   })
 }
 
-describe('integration', function() {
+describe('integration', function () {
   let request: any
   let server: any
   let serviceConstructor: any
   let testClassConstructor: any
   let testFactoryFunctionInvocation: any
 
-  beforeEach(function() {
+  beforeEach(function () {
     serviceConstructor = jest.fn()
     testClassConstructor = jest.fn()
     testFactoryFunctionInvocation = jest.fn()
     const spies = {
       serviceConstructor,
       testClassConstructor,
-      testFactoryFunctionInvocation
+      testFactoryFunctionInvocation,
     }
-    return createServer(spies).then(s => {
+    return createServer(spies).then((s) => {
       server = s
       const addr = server.address()
       request = AssertRequest(`http://127.0.0.1:${addr.port}`)
     })
   })
 
-  afterEach(function() {
+  afterEach(function () {
     server.close()
   })
 
-  describe('makeInvoker', function() {
-    it('makes sure the spy is called once for each request', function() {
+  describe('makeInvoker', function () {
+    it('makes sure the spy is called once for each request', function () {
       return Promise.all([
         request.get('/function').okay(),
-        request.get('/function').okay()
+        request.get('/function').okay(),
       ]).then(() => {
         expect(testClassConstructor).not.toHaveBeenCalled()
         expect(testFactoryFunctionInvocation).toHaveBeenCalledTimes(2)
@@ -100,11 +100,11 @@ describe('integration', function() {
     })
   })
 
-  describe('makeClassInvoker', function() {
-    it('makes sure the spy is called once for each request', function() {
+  describe('makeClassInvoker', function () {
+    it('makes sure the spy is called once for each request', function () {
       return Promise.all([
         request.get('/class').okay(),
-        request.get('/class').okay()
+        request.get('/class').okay(),
       ]).then(() => {
         expect(testFactoryFunctionInvocation).not.toHaveBeenCalled()
         expect(testClassConstructor).toHaveBeenCalledTimes(2)
