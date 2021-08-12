@@ -23,7 +23,7 @@ script: npm run coveralls
 
 after_success:
   - npm install -g travis-deploy-once@4
-  - travis-deploy-once "npm run semantic-release"
+  - travis-deploy-once --pro "npm run semantic-release"
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
