@@ -41,18 +41,9 @@ describe('controller registration', () => {
         .okay()
         .header('x-root-before', 'ts')
         .json({ method: 'POST', id: '123' }),
-      request
-        .get('/ts')
-        .okay()
-        .json({ message: 'index' }),
-      request
-        .get('/ping')
-        .okay()
-        .json({ message: 'pong' }),
-      request
-        .get('/func')
-        .okay()
-        .json({ message: 'func' })
+      request.get('/ts').okay().json({ message: 'index' }),
+      request.get('/ping').okay().json({ message: 'pong' }),
+      request.get('/func').okay().json({ message: 'func' }),
     ])
   })
 })
@@ -60,7 +51,7 @@ describe('controller registration', () => {
 function createServer(): Promise<[http.Server, any]> {
   const app = new Koa()
   const container = createContainer().register({
-    service: asFunction(() => ({ get: (message: string) => ({ message }) }))
+    service: asFunction(() => ({ get: (message: string) => ({ message }) })),
   })
   app.use(scopePerRequest(container))
   app.use(loadControllers('__fixtures__/1/*.*'))
@@ -69,13 +60,13 @@ function createServer(): Promise<[http.Server, any]> {
   app.use(
     controller(
       createController(({ service }: any) => ({
-        func: (ctx: any) => (ctx.body = service.get('func'))
+        func: (ctx: any) => (ctx.body = service.get('func')),
       }))
         .prefix('/func')
         .get('', 'func')
     )
   )
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const server = app.listen(() => {
       const addr = server.address() as AddressInfo
       resolve([server, AssertRequest(`http://127.0.0.1:${addr.port}`)])

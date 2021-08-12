@@ -1,13 +1,13 @@
 import { makeClassInvoker, makeFunctionInvoker, inject } from '../invokers'
 import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
 
-describe('invokers', function() {
+describe('invokers', function () {
   let container: AwilixContainer
   let methodSpy: any
   let factorySpy: any
   let constructorSpy: any
   let ctx: any
-  beforeEach(function() {
+  beforeEach(function () {
     factorySpy = jest.fn()
     constructorSpy = jest.fn()
     methodSpy = jest.fn()
@@ -15,13 +15,13 @@ describe('invokers', function() {
     container.register('param', asValue(42))
     ctx = {
       state: {
-        container
-      }
+        container,
+      },
     }
   })
 
-  describe('makeFunctionInvoker', function() {
-    it('returns callable middleware', function() {
+  describe('makeFunctionInvoker', function () {
+    it('returns callable middleware', function () {
       function target({ param }: any) {
         factorySpy()
         const obj = {
@@ -29,7 +29,7 @@ describe('invokers', function() {
             methodSpy()
             expect(this).toBe(obj)
             return [ctx, param]
-          }
+          },
         }
         return obj
       }
@@ -46,8 +46,8 @@ describe('invokers', function() {
     })
   })
 
-  describe('makeClassInvoker', function() {
-    it('returns callable middleware', function() {
+  describe('makeClassInvoker', function () {
+    it('returns callable middleware', function () {
       class Target {
         param: any
         constructor({ param }: any) {

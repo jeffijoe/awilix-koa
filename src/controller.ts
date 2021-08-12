@@ -6,7 +6,7 @@ import {
   HttpVerbs,
   getStateAndTarget,
   IStateAndTarget,
-  IAwilixControllerBuilder
+  IAwilixControllerBuilder,
 } from 'awilix-router-core'
 import { makeInvoker } from './invokers'
 import compose from 'koa-compose'
@@ -32,7 +32,7 @@ export function controller(
 ): Middleware {
   const router = new Router()
   if (Array.isArray(ControllerClass)) {
-    ControllerClass.forEach(c =>
+    ControllerClass.forEach((c) =>
       _registerController(router, getStateAndTarget(c))
     )
   } else {
@@ -52,7 +52,7 @@ export function loadControllers(pattern: string, opts?: IOptions): Middleware {
   const router = new Router()
   findControllers(pattern, {
     ...opts,
-    absolute: true
+    absolute: true,
   }).forEach(_registerController.bind(null, router))
 
   return compose([router.routes(), router.allowedMethods()]) as any
@@ -77,7 +77,7 @@ function _registerController(
   const invoker = makeInvoker(target as any)
   const rolledUp = rollUpState(state)
   rolledUp.forEach((methodCfg, methodName) => {
-    methodCfg.verbs.forEach(httpVerb => {
+    methodCfg.verbs.forEach((httpVerb) => {
       let method = httpVerb.toLowerCase()
       if (httpVerb === HttpVerbs.ALL) {
         method = 'all'
