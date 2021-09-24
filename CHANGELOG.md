@@ -1,5 +1,10 @@
 # Changelog
 
+# 5.0.1
+
+* Fix `peerDependencies` for `awilix`, it now requires `^5.0.0`
+* Updated packages
+
 # 5.0.0
 
 ### BREAKING CHANGES
