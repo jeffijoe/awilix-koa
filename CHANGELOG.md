@@ -1,5 +1,13 @@
 # Changelog
 
+# 6.0.0
+
+* Update to Awilix v6
+
+### BREAKING CHANGES
+
+* Minimum supported Awilix version is v6.
+
 # 5.0.1
 
 * Fix `peerDependencies` for `awilix`, it now requires `^5.0.0`
