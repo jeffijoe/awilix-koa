@@ -1,5 +1,14 @@
 # Changelog
 
+# 7.0.1
+
+* Fix `perDependencies` for `awilix`
+* Update packages
+
+# 7.0.0
+
+* Update to Awilix v7
+
 # 6.0.0
 
 * Update to Awilix v6
