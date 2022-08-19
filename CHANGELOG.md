@@ -1,5 +1,9 @@
 # Changelog
 
+# 8.0.0
+
+* Upgrade `@koa/router` to v12.
+
 # 7.0.1
 
 * Fix `perDependencies` for `awilix`
