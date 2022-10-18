@@ -1,5 +1,15 @@
 # Changelog
 
+# 9.0.0
+
+* Upgrade `awilix` to `8.0.0`
+* **BREAKING**: Drop Node 12 support
+* Remove `awilix` as a peer dependency, it's annoying to have to upgrade these packages even though the API is compatible.
+
+### BREAKING CHANGES
+
+Minimum supported Node version is now 14.
+
 # 8.0.0
 
 * Upgrade `@koa/router` to v12.
