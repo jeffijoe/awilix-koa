@@ -1,6 +1,12 @@
 # Name of the pipeline
 name: CI
 
+# Allow the token to create releases and read pull requests.
+# Needed for semantic-release.
+permissions:
+  contents: write
+  pull-requests: read
+
 # When pushing to `master` or when there is a PR for the branch.
 on:
   pull_request:
