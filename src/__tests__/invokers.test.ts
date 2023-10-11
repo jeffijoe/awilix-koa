@@ -104,7 +104,7 @@ describe('invokers', function () {
               methodSpy()
               return [ctx, param, additional]
             }
-          })
+          }),
         )
 
         // Call it twice.

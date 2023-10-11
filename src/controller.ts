@@ -10,7 +10,7 @@ import {
 } from 'awilix-router-core'
 import { makeInvoker } from './invokers'
 import compose from 'koa-compose'
-const Router = require('@koa/router')
+import Router from '@koa/router'
 
 /**
  * Constructor type.
@@ -28,12 +28,12 @@ export type ConstructorOrControllerBuilder =
 export function controller(
   ControllerClass:
     | ConstructorOrControllerBuilder
-    | Array<ConstructorOrControllerBuilder>
+    | Array<ConstructorOrControllerBuilder>,
 ): Middleware {
   const router = new Router()
   if (Array.isArray(ControllerClass)) {
     ControllerClass.forEach((c) =>
-      _registerController(router, getStateAndTarget(c))
+      _registerController(router, getStateAndTarget(c)),
     )
   } else {
     _registerController(router, getStateAndTarget(ControllerClass))
@@ -65,15 +65,14 @@ export function loadControllers(pattern: string, opts?: IOptions): Middleware {
  * @param ControllerClass
  */
 function _registerController(
-  router: any,
-  stateAndTarget: IStateAndTarget | null
+  router: Router,
+  stateAndTarget: IStateAndTarget | null,
 ): void {
   if (!stateAndTarget) {
     return
   }
 
   const { state, target } = stateAndTarget
-  /*tslint:disable-next-line*/
   const invoker = makeInvoker(target as any)
   const rolledUp = rollUpState(state)
   rolledUp.forEach((methodCfg, methodName) => {
@@ -83,11 +82,14 @@ function _registerController(
         method = 'all'
       }
 
+      // This should be safe since the router exposes methods for all the HTTP verbs.
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       router[method](
         methodCfg.paths,
         ...methodCfg.beforeMiddleware,
         invoker(methodName),
-        ...methodCfg.afterMiddleware
+        ...methodCfg.afterMiddleware,
       )
     })
   })
