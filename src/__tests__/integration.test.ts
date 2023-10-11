@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Koa from 'koa'
 import { scopePerRequest, makeInvoker, makeClassInvoker } from '../'
 import { createContainer, asClass, asFunction } from 'awilix'
@@ -44,7 +45,7 @@ function createServer(spies: any) {
       Object.keys(spies).reduce((obj: any, key) => {
         obj[key] = asFunction(spies[key])
         return obj
-      }, {})
+      }, {}),
     )
   app.use(scopePerRequest(container))
 
@@ -55,8 +56,9 @@ function createServer(spies: any) {
   app.use(router.routes())
 
   return new Promise((resolve, reject) => {
-    let server: any
-    server = app.listen((err: any) => (err ? reject(err) : resolve(server)))
+    const server = app.listen((err: any) =>
+      err ? reject(err) : resolve(server),
+    )
   })
 }
 

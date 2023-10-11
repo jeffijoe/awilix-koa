@@ -63,8 +63,8 @@ function createServer(): Promise<[http.Server, any]> {
         func: (ctx: any) => (ctx.body = service.get('func')),
       }))
         .prefix('/func')
-        .get('', 'func')
-    )
+        .get('', 'func'),
+    ),
   )
   return new Promise((resolve) => {
     const server = app.listen(() => {

@@ -24,13 +24,11 @@ import assert from 'assert'
  */
 export function makeInvoker<T>(
   functionOrClass: ClassOrFunctionReturning<T>,
-  opts?: ResolverOptions<T>
+  opts?: ResolverOptions<T>,
 ) {
   return isClass(functionOrClass)
-    ? /*tslint:disable-next-line*/
-      makeClassInvoker(functionOrClass as Constructor<T>, opts)
-    : /*tslint:disable-next-line*/
-      makeFunctionInvoker(functionOrClass as FunctionReturning<T>, opts)
+    ? makeClassInvoker(functionOrClass as Constructor<T>, opts)
+    : makeFunctionInvoker(functionOrClass as FunctionReturning<T>, opts)
 }
 
 /**
@@ -45,7 +43,7 @@ export function makeInvoker<T>(
  */
 export function makeFunctionInvoker<T>(
   fn: FunctionReturning<T>,
-  opts?: ResolverOptions<T>
+  opts?: ResolverOptions<T>,
 ) {
   return makeResolverInvoker(asFunction(fn, opts))
 }
@@ -58,7 +56,7 @@ export function makeFunctionInvoker<T>(
  */
 export function makeClassInvoker<T>(
   Class: Constructor<T>,
-  opts?: ResolverOptions<T>
+  opts?: ResolverOptions<T>,
 ) {
   return makeResolverInvoker(asClass(Class, opts))
 }
@@ -95,8 +93,8 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
       assert(
         methodToInvoke,
         `methodToInvoke must be a valid method type, such as string, number or symbol, but was ${String(
-          methodToInvoke
-        )}`
+          methodToInvoke,
+        )}`,
       )
       return resolved[methodToInvoke](ctx, ...rest)
     }
@@ -124,10 +122,9 @@ export function inject(factory: ClassOrFunctionReturning<any> | Resolver<any>) {
  * Wraps or returns a resolver.
  */
 function getResolver<T>(
-  arg: ClassOrFunctionReturning<T> | Resolver<T>
+  arg: ClassOrFunctionReturning<T> | Resolver<T>,
 ): Resolver<T> {
   if (typeof arg === 'function') {
-    /*tslint:disable-next-line*/
     return asFunction(arg as any)
   }
 

@@ -8,7 +8,10 @@ import { AwilixContainer } from 'awilix'
  * @return {Function}
  */
 export function scopePerRequest(container: AwilixContainer) {
-  return function scopePerRequestMiddleware(ctx: any, next: Function) {
+  return function scopePerRequestMiddleware(
+    ctx: any,
+    next: import('koa').Next,
+  ) {
     ctx.state.container = container.createScope()
     return next()
   }
