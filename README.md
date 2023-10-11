@@ -1,9 +1,7 @@
 # awilix-koa
 
 [![npm version](https://badge.fury.io/js/awilix-koa.svg)](https://badge.fury.io/js/awilix-koa)
-[![Dependency Status](https://david-dm.org/jeffijoe/awilix-koa.svg)](https://david-dm.org/jeffijoe/awilix-koa)
-[![devDependency Status](https://david-dm.org/jeffijoe/awilix-koa/dev-status.svg)](https://david-dm.org/jeffijoe/awilix-koa#info=devDependencies)
-[![Build Status](https://travis-ci.org/jeffijoe/awilix-koa.svg?branch=master)](https://travis-ci.org/jeffijoe/awilix-koa)
+[![CI](https://github.com/jeffijoe/awilix-koa/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffijoe/awilix-koa/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/jeffijoe/awilix-koa/badge.svg?branch=master)](https://coveralls.io/github/jeffijoe/awilix-koa?branch=master)
 ![Typings Included](https://img.shields.io/badge/typings-included-brightgreen.svg)
 
@@ -11,15 +9,17 @@ Awilix helpers, router and scope-instantiating middleware for **Koa**. 🐨
 
 # Table of Contents
 
+- [awilix-koa](#awilix-koa)
+- [Table of Contents](#table-of-contents)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Awesome Usage](#awesome-usage)
 - [Why do I need it?](#why-do-i-need-it)
   - [Manual](#manual)
-  - [Using awilix-koa](#using-awilix-koa)
+  - [Using `awilix-koa`](#using-awilix-koa)
 - [API](#api)
 - [Contributing](#contributing)
-  - [npm run scripts](#npm-run-scripts)
+  - [`npm run` scripts](#npm-run-scripts)
 - [Author](#author)
 
 # Installation
