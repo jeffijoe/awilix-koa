@@ -43,19 +43,31 @@ export function controller(
 }
 
 /**
- * Loads controllers for the given pattern.
+ * Imports and prepares controllers for the given pattern, applying them to the supplied router
  *
+ * @param router
  * @param pattern
  * @param opts
  */
-export function loadControllers(pattern: string, opts?: IOptions): Middleware {
-  const router = new Router()
+export function importControllers(router: Router, pattern: string, opts?: IOptions): void {
   findControllers(pattern, {
     ...opts,
     absolute: true,
   }).forEach(_registerController.bind(null, router))
+}
 
-  return compose([router.routes(), router.allowedMethods()]) as any
+/**
+ * Loads controllers for the given pattern and returns a koa-compose'd Middleware
+ * This return value must be used with `Koa.use`, and is incompatible with `Router.use`
+ *
+ * @param pattern
+ * @param opts
+ * @param router
+ */
+export function loadControllers(pattern: string, opts?: IOptions, router?: Router): Middleware {
+  const r = router || new Router()
+  importControllers(r, pattern, opts)
+  return compose([r.routes(), r.allowedMethods()]) as any
 }
 
 /**

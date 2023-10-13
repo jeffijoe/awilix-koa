@@ -359,7 +359,8 @@ The package exports everything from `awilix-router-core` as well as the followin
 
 - `scopePerRequest(container)`: creates a scope per request.
 - `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
-- `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
+- `importControllers(router, pattern, opts)`: imports files matching a glob pattern, registers their exports as controllers, applying them to the supplied koa-router
+- `loadControllers(pattern, opts, router)`: loads files matching a glob pattern and registers their exports as controllers and returns a middleware for use with Koa
 - `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
 - `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
 - `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
