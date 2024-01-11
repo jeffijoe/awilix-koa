@@ -50,7 +50,7 @@ describe('controller registration', () => {
 
 function createServer(): Promise<[http.Server, any]> {
   const app = new Koa()
-  const container = createContainer().register({
+  const container = createContainer({ strict: true }).register({
     service: asFunction(() => ({ get: (message: string) => ({ message }) })),
   })
   app.use(scopePerRequest(container))

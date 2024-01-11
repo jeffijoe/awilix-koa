@@ -36,14 +36,13 @@ function createServer(spies: any) {
   const app = new Koa()
   const router = new KoaRouter()
 
-  const container = createContainer()
+  const container = createContainer({ strict: true })
     .register({
       testService: asClass(TestService).scoped(),
     })
-    // These will be registered as transient.
     .register(
       Object.keys(spies).reduce((obj: any, key) => {
-        obj[key] = asFunction(spies[key])
+        obj[key] = asFunction(spies[key]).scoped()
         return obj
       }, {}),
     )

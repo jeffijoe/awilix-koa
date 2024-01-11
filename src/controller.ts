@@ -49,7 +49,11 @@ export function controller(
  * @param pattern
  * @param opts
  */
-export function importControllers(router: Router, pattern: string, opts?: IOptions): void {
+export function importControllers(
+  router: Router,
+  pattern: string,
+  opts?: IOptions,
+): void {
   findControllers(pattern, {
     ...opts,
     absolute: true,
@@ -64,7 +68,11 @@ export function importControllers(router: Router, pattern: string, opts?: IOptio
  * @param opts
  * @param router
  */
-export function loadControllers(pattern: string, opts?: IOptions, router?: Router): Middleware {
+export function loadControllers(
+  pattern: string,
+  opts?: IOptions,
+  router?: Router,
+): Middleware {
   const r = router || new Router()
   importControllers(r, pattern, opts)
   return compose([r.routes(), r.allowedMethods()]) as any
