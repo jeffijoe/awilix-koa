@@ -358,6 +358,7 @@ That concludes the tutorial! Hope you find it useful, I know I have.
 The package exports everything from `awilix-router-core` as well as the following **Koa middleware factories**:
 
 - `scopePerRequest(container)`: creates a scope per request.
+- `attachContainer(container)`: permits use of awilix-koa without creating a scope per request.
 - `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
 - `importControllers(router, pattern, opts)`: imports files matching a glob pattern, registers their exports as controllers, applying them to the supplied koa-router
 - `loadControllers(pattern, opts, router)`: loads files matching a glob pattern and registers their exports as controllers and returns a middleware for use with Koa

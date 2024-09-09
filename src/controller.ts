@@ -19,24 +19,30 @@ export type ConstructorOrControllerBuilder =
   | (new (...args: Array<any>) => any)
   | IAwilixControllerBuilder
 
+export interface InstanceOptions {
+  singleton?: boolean
+}
+
 /**
  * Registers one or multiple decorated controller classes.
  *
  * @param ControllerClass One or multiple "controller" classes
  *        with decorators to register
+ * @param options
  */
 export function controller(
   ControllerClass:
     | ConstructorOrControllerBuilder
     | Array<ConstructorOrControllerBuilder>,
+  options?: InstanceOptions
 ): Middleware {
   const router = new Router()
   if (Array.isArray(ControllerClass)) {
     ControllerClass.forEach((c) =>
-      _registerController(router, getStateAndTarget(c)),
+      _registerController(router, options, getStateAndTarget(c)),
     )
   } else {
-    _registerController(router, getStateAndTarget(ControllerClass))
+    _registerController(router, options, getStateAndTarget(ControllerClass))
   }
 
   return compose([router.routes(), router.allowedMethods()]) as any
@@ -47,17 +53,19 @@ export function controller(
  *
  * @param router
  * @param pattern
- * @param opts
+ * @param globOptions
+ * @param options
  */
 export function importControllers(
   router: Router,
   pattern: string,
-  opts?: IOptions,
+  globOptions?: IOptions,
+  options?: InstanceOptions
 ): void {
   findControllers(pattern, {
-    ...opts,
+    ...globOptions,
     absolute: true,
-  }).forEach(_registerController.bind(null, router))
+  }).forEach(_registerController.bind(null, router, options))
 }
 
 /**
@@ -65,16 +73,18 @@ export function importControllers(
  * This return value must be used with `Koa.use`, and is incompatible with `Router.use`
  *
  * @param pattern
- * @param opts
+ * @param globOptions
  * @param router
+ * @param options
  */
 export function loadControllers(
   pattern: string,
-  opts?: IOptions,
+  globOptions?: IOptions,
   router?: Router,
+  options?: InstanceOptions
 ): Middleware {
   const r = router || new Router()
-  importControllers(r, pattern, opts)
+  importControllers(r, pattern, globOptions, options)
   return compose([r.routes(), r.allowedMethods()]) as any
 }
 
@@ -82,18 +92,20 @@ export function loadControllers(
  * Reads the config state and registers the routes in the router.
  *
  * @param router
+ * @param options
  * @param ControllerClass
  */
 function _registerController(
   router: Router,
-  stateAndTarget: IStateAndTarget | null,
+  options?: InstanceOptions,
+  stateAndTarget?: IStateAndTarget | null,
 ): void {
   if (!stateAndTarget) {
     return
   }
 
   const { state, target } = stateAndTarget
-  const invoker = makeInvoker(target as any)
+  const invoker = makeInvoker(target as any, { lifetime: options?.singleton ? 'SINGLETON' : 'SCOPED' })
   const rolledUp = rollUpState(state)
   rolledUp.forEach((methodCfg, methodName) => {
     methodCfg.verbs.forEach((httpVerb) => {
