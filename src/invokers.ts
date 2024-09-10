@@ -38,7 +38,8 @@ export function makeInvoker<T>(
  * only parameter, and then call the `methodToInvoke` on
  * the result.
  *
- * @param, {Function} fn
+ * @param {Function} fn
+ * @param opts
  * @return {(methodToInvoke: string) => (ctx) => void}
  */
 export function makeFunctionInvoker<T>(
@@ -51,7 +52,8 @@ export function makeFunctionInvoker<T>(
 /**
  * Same as `makeInvoker` but for classes.
  *
- * @param  {Class} Class
+ * @param {Class} Class
+ * @param opts
  * @return {(methodToInvoke: string) => (ctx) => void}
  */
 export function makeClassInvoker<T>(
@@ -68,10 +70,13 @@ export function makeClassInvoker<T>(
  * then call the method on the result, passing in the Koa context
  * and `next()`.
  *
- * @param, {Resolver} resolver
+ * @param {Resolver} resolver
  * @return {(methodToInvoke: string) => (ctx) => void}
  */
 export function makeResolverInvoker<T>(resolver: Resolver<T>) {
+  const singleton = resolver.lifetime === 'SINGLETON'
+  let _resolved: any
+
   /**
    * 2nd step is to create a method to invoke on the result
    * of the resolver.
@@ -89,7 +94,21 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
      */
     return function memberInvoker(ctx: any, ...rest: any[]) {
       const container: AwilixContainer = ctx.state.container
-      const resolved: any = container.build(resolver)
+      if (!container) {
+        throw new Error('Awilix container not found on Koa state object. Please ensure you use either scopePerRequest or attachContainer')
+      }
+
+      let resolved: any
+      if (singleton) {
+        if (!_resolved) {
+          _resolved = container.build(resolver)
+        }
+        resolved = _resolved
+      }
+      else {
+        resolved = container.build(resolver)
+      }
+
       assert(
         methodToInvoke,
         `methodToInvoke must be a valid method type, such as string, number or symbol, but was ${String(
