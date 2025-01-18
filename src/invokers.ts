@@ -95,7 +95,9 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
     return function memberInvoker(ctx: any, ...rest: any[]) {
       const container: AwilixContainer = ctx.state.container
       if (!container) {
-        throw new Error('Awilix container not found on Koa state object. Please ensure you use either scopePerRequest or attachContainer')
+        throw new Error(
+          'Awilix container not found on Koa state object. Please ensure you use either scopePerRequest or attachContainer',
+        )
       }
 
       let resolved: any
@@ -104,8 +106,7 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
           _resolved = container.build(resolver)
         }
         resolved = _resolved
-      }
-      else {
+      } else {
         resolved = container.build(resolver)
       }
 

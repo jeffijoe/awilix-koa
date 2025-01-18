@@ -1,4 +1,4 @@
-import { Middleware } from 'koa'
+import { DefaultContext, DefaultState, Middleware } from 'koa'
 import { IOptions } from 'glob'
 import {
   rollUpState,
@@ -30,13 +30,13 @@ export interface InstanceOptions {
  *        with decorators to register
  * @param options
  */
-export function controller(
+export function controller<TState = DefaultState, TContext = DefaultContext>(
   ControllerClass:
     | ConstructorOrControllerBuilder
     | Array<ConstructorOrControllerBuilder>,
-  options?: InstanceOptions
-): Middleware {
-  const router = new Router()
+  options?: InstanceOptions,
+): Middleware<TState, TContext> {
+  const router = new Router<TState, TContext>()
   if (Array.isArray(ControllerClass)) {
     ControllerClass.forEach((c) =>
       _registerController(router, options, getStateAndTarget(c)),
@@ -56,16 +56,26 @@ export function controller(
  * @param globOptions
  * @param options
  */
-export function importControllers(
-  router: Router,
+export function importControllers<
+  TState = DefaultState,
+  TContext = DefaultContext,
+>(
+  router: Router<TState, TContext>,
   pattern: string,
   globOptions?: IOptions,
-  options?: InstanceOptions
+  options?: InstanceOptions,
 ): void {
   findControllers(pattern, {
     ...globOptions,
     absolute: true,
-  }).forEach(_registerController.bind(null, router, options))
+  }).forEach(
+    _registerController.bind<
+      null,
+      [Router<TState, TContext>, InstanceOptions | undefined],
+      [],
+      void
+    >(null, router, options),
+  )
 }
 
 /**
@@ -77,13 +87,16 @@ export function importControllers(
  * @param router
  * @param options
  */
-export function loadControllers(
+export function loadControllers<
+  TState = DefaultState,
+  TContext = DefaultContext,
+>(
   pattern: string,
   globOptions?: IOptions,
-  router?: Router,
-  options?: InstanceOptions
-): Middleware {
-  const r = router || new Router()
+  router?: Router<TState, TContext>,
+  options?: InstanceOptions,
+): Middleware<TState, TContext> {
+  const r = router || new Router<TState, TContext>()
   importControllers(r, pattern, globOptions, options)
   return compose([r.routes(), r.allowedMethods()]) as any
 }
@@ -95,8 +108,8 @@ export function loadControllers(
  * @param options
  * @param ControllerClass
  */
-function _registerController(
-  router: Router,
+function _registerController<TState, TContext>(
+  router: Router<TState, TContext>,
   options?: InstanceOptions,
   stateAndTarget?: IStateAndTarget | null,
 ): void {
@@ -105,7 +118,9 @@ function _registerController(
   }
 
   const { state, target } = stateAndTarget
-  const invoker = makeInvoker(target as any, { lifetime: options?.singleton ? 'SINGLETON' : 'SCOPED' })
+  const invoker = makeInvoker(target as any, {
+    lifetime: options?.singleton ? 'SINGLETON' : 'SCOPED',
+  })
   const rolledUp = rollUpState(state)
   rolledUp.forEach((methodCfg, methodName) => {
     methodCfg.verbs.forEach((httpVerb) => {
