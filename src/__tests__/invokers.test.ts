@@ -1,4 +1,9 @@
-import { makeClassInvoker, makeFunctionInvoker, inject } from '../invokers'
+import {
+  makeClassInvoker,
+  makeFunctionInvoker,
+  makeInvoker,
+  inject,
+} from '../invokers'
 import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
 
 describe('invokers', function () {
@@ -115,6 +120,95 @@ describe('invokers', function () {
         expect(constructorSpy).toHaveBeenCalledTimes(2)
         expect(methodSpy).toHaveBeenCalledTimes(2)
       })
+    })
+  })
+
+  describe('makeInvoker', () => {
+    it('uses makeClassInvoker for classes', () => {
+      class Target {
+        param: any
+        constructor({ param }: any) {
+          constructorSpy()
+          this.param = param
+        }
+
+        method(ctx: any) {
+          methodSpy()
+          return this.param
+        }
+      }
+
+      const invoker = makeInvoker(Target)
+      const result = invoker('method')(ctx)
+
+      expect(result).toEqual(42)
+      expect(constructorSpy).toHaveBeenCalledTimes(1)
+      expect(methodSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('uses makeFunctionInvoker for functions', () => {
+      function target({ param }: any) {
+        factorySpy()
+        return {
+          method() {
+            methodSpy()
+            return param
+          },
+        }
+      }
+
+      const invoker = makeInvoker(target)
+      const result = invoker('method')(ctx)
+
+      expect(result).toEqual(42)
+      expect(factorySpy).toHaveBeenCalledTimes(1)
+      expect(methodSpy).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('error handling', () => {
+    it('throws when container is not on ctx.state', () => {
+      class Target {
+        method() {
+          return 'should not reach here'
+        }
+      }
+
+      const invoker = makeClassInvoker(Target)
+      const ctxWithoutContainer = { state: {} }
+
+      expect(() => invoker('method')(ctxWithoutContainer)).toThrow(
+        'Awilix container not found on Koa state object',
+      )
+    })
+  })
+
+  describe('singleton support', () => {
+    it('caches the resolved instance when lifetime is SINGLETON', () => {
+      class Target {
+        param: any
+        constructor({ param }: any) {
+          constructorSpy()
+          this.param = param
+        }
+
+        method() {
+          methodSpy()
+          return this.param
+        }
+      }
+
+      const invoker = makeClassInvoker(Target, { lifetime: 'SINGLETON' })
+
+      // Call it multiple times
+      invoker('method')(ctx)
+      invoker('method')(ctx)
+      const result = invoker('method')(ctx)
+
+      expect(result).toEqual(42)
+      // Constructor should only be called once due to singleton caching
+      expect(constructorSpy).toHaveBeenCalledTimes(1)
+      expect(methodSpy).toHaveBeenCalledTimes(3)
     })
   })
 })
