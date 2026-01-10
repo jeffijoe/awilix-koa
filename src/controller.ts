@@ -1,8 +1,8 @@
 import { DefaultContext, DefaultState, Middleware } from 'koa'
-import { IOptions } from 'glob'
 import {
   rollUpState,
   findControllers,
+  FindControllersOptions,
   HttpVerbs,
   getStateAndTarget,
   IStateAndTarget,
@@ -62,7 +62,7 @@ export function importControllers<
 >(
   router: Router<TState, TContext>,
   pattern: string,
-  globOptions?: IOptions,
+  globOptions?: FindControllersOptions,
   options?: InstanceOptions,
 ): void {
   findControllers(pattern, {
@@ -92,7 +92,7 @@ export function loadControllers<
   TContext = DefaultContext,
 >(
   pattern: string,
-  globOptions?: IOptions,
+  globOptions?: FindControllersOptions,
   router?: Router<TState, TContext>,
   options?: InstanceOptions,
 ): Middleware<TState, TContext> {

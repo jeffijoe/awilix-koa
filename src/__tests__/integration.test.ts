@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Koa from 'koa'
 import { scopePerRequest, makeInvoker, makeClassInvoker } from '../'
 import { createContainer, asClass, asFunction } from 'awilix'
