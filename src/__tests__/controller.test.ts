@@ -44,6 +44,7 @@ describe('controller registration', () => {
       request.get('/ts').okay().json({ message: 'index' }),
       request.get('/ping').okay().json({ message: 'pong' }),
       request.get('/func').okay().json({ message: 'func' }),
+      request.get('/singleton').okay().json({ message: 'singleton' }),
     ])
   })
 })
@@ -57,6 +58,7 @@ function createServer(): Promise<[http.Server, any]> {
   app.use(loadControllers('__fixtures__/1/*.*'))
   app.use(controller(PlainController))
   app.use(controller([Nothing]))
+  app.use(controller(SingletonController, { singleton: true }))
   app.use(
     controller(
       createController(({ service }: any) => ({
@@ -81,5 +83,13 @@ class PlainController {
   @GET()
   ping(ctx: any) {
     ctx.body = { message: 'pong' }
+  }
+}
+
+class SingletonController {
+  @route('/singleton')
+  @GET()
+  singleton(ctx: any) {
+    ctx.body = { message: 'singleton' }
   }
 }
