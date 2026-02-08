@@ -28,8 +28,6 @@ Awilix helpers, router and scope-instantiating middleware for **Koa**. 🐨
 npm install --save awilix-koa
 ```
 
-_Requires Node v6 or above_
-
 # Basic Usage
 
 Add the middleware to your Koa app.

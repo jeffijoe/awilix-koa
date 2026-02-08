@@ -8,8 +8,8 @@
     "strictNullChecks": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "target": "ES2021",
-    "module": "Node16",
+    "target": "ES2022",
+    "module": "nodenext",
     "importHelpers": false,
     "sourceMap": true,
     "declaration": true,
@@ -17,6 +17,6 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
-    "lib": ["ES2021"]
+    "lib": ["ES2022"]
   }
 }
