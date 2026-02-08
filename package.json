@@ -45,7 +45,7 @@
   "homepage": "https://github.com/jeffijoe/awilix-koa#readme",
   "dependencies": {
     "@koa/router": "^15.3.0",
-    "awilix-router-core": "^3.0.0",
+    "awilix-router-core": "^4.0.0",
     "koa-compose": "^4.1.0"
   },
   "devDependencies": {
@@ -64,7 +64,7 @@
     "@types/prettier": "^3.0.0",
     "@types/rimraf": "^4.0.5",
     "assert-request": "^1.0.6",
-    "awilix": "^12.0.5",
+    "awilix": "^12.1.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^30.2.0",
     "coveralls": "^3.1.1",
