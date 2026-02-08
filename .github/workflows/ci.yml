@@ -22,7 +22,6 @@ jobs:
       fail-fast: true
       matrix:
         version:
-          - 20
           - 22
           - 24
           - current

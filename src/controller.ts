@@ -2,6 +2,7 @@ import { DefaultContext, DefaultState, Middleware } from 'koa'
 import {
   rollUpState,
   findControllers,
+  FindControllersResult,
   FindControllersOptions,
   HttpVerbs,
   getStateAndTarget,
@@ -59,16 +60,30 @@ export function controller<TState = DefaultState, TContext = DefaultContext>(
 export function importControllers<
   TState = DefaultState,
   TContext = DefaultContext,
+  ESM extends boolean = false,
 >(
   router: Router<TState, TContext>,
   pattern: string,
-  globOptions?: FindControllersOptions,
+  globOptions?: FindControllersOptions<ESM>,
   options?: InstanceOptions,
-): void {
-  findControllers(pattern, {
-    ...globOptions,
-    absolute: true,
-  }).forEach(
+): ESM extends true ? Promise<void> : void {
+  const findOpts = { ...globOptions, absolute: true }
+  const result = findControllers(pattern, findOpts)
+
+  if (globOptions?.esModules) {
+    return (result as Promise<FindControllersResult>).then((found) => {
+      found.forEach(
+        _registerController.bind<
+          null,
+          [Router<TState, TContext>, InstanceOptions | undefined],
+          [],
+          void
+        >(null, router, options),
+      )
+    }) as any
+  }
+
+  ;(result as FindControllersResult).forEach(
     _registerController.bind<
       null,
       [Router<TState, TContext>, InstanceOptions | undefined],
@@ -76,6 +91,7 @@ export function importControllers<
       void
     >(null, router, options),
   )
+  return undefined as any
 }
 
 /**
@@ -90,14 +106,24 @@ export function importControllers<
 export function loadControllers<
   TState = DefaultState,
   TContext = DefaultContext,
+  ESM extends boolean = false,
 >(
   pattern: string,
-  globOptions?: FindControllersOptions,
+  globOptions?: FindControllersOptions<ESM>,
   router?: Router<TState, TContext>,
   options?: InstanceOptions,
-): Middleware<TState, TContext> {
+): ESM extends true
+  ? Promise<Middleware<TState, TContext>>
+  : Middleware<TState, TContext> {
   const r = router || new Router<TState, TContext>()
-  importControllers(r, pattern, globOptions, options)
+  const result = importControllers(r, pattern, globOptions, options)
+
+  if (globOptions?.esModules) {
+    return (result as Promise<void>).then(
+      () => compose([r.routes(), r.allowedMethods()]) as any,
+    ) as any
+  }
+
   return compose([r.routes(), r.allowedMethods()]) as any
 }
 
