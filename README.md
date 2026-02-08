@@ -139,7 +139,7 @@ export default class UserAPI {
 }
 ```
 
-**`server.js`**
+**`server.js`** - CommonJS / synchronous
 
 ```js
 import Koa from 'koa'
@@ -156,6 +156,26 @@ app.use(scopePerRequest(container))
 // relative to the current working directory.
 // This is a glob pattern.
 app.use(loadControllers('routes/*.js', { cwd: __dirname }))
+
+app.listen(3000)
+```
+
+**`server.js`** - ESM / async
+
+When using ES modules, pass `esModules: true`. This makes `loadControllers` return a `Promise<Middleware>`, so you'll need to `await` it.
+
+```js
+import Koa from 'koa'
+import { asClass, createContainer } from 'awilix'
+import { loadControllers, scopePerRequest } from 'awilix-koa'
+
+const app = new Koa()
+const container = createContainer().register({
+  userService: asClass(/*...*/),
+  todoService: asClass(/*...*/)
+})
+app.use(scopePerRequest(container))
+app.use(await loadControllers('routes/*.js', { esModules: true }))
 
 app.listen(3000)
 ```
@@ -360,8 +380,8 @@ The package exports everything from `awilix-router-core` as well as the followin
 - `scopePerRequest(container)`: creates a scope per request.
 - `attachContainer(container)`: permits use of awilix-koa without creating a scope per request.
 - `controller(decoratedClassOrController)`: registers routes and delegates to Koa Router.
-- `importControllers(router, pattern, opts)`: imports files matching a glob pattern, registers their exports as controllers, applying them to the supplied koa-router
-- `loadControllers(pattern, opts, router)`: loads files matching a glob pattern and registers their exports as controllers and returns a middleware for use with Koa
+- `importControllers(router, pattern, opts)`: imports files matching a glob pattern, registers their exports as controllers, applying them to the supplied koa-router. Supports `opts.esModules: true` for ESM projects — when enabled, returns a `Promise<void>` instead of `void`.
+- `loadControllers(pattern, opts, router)`: loads files matching a glob pattern and registers their exports as controllers and returns a middleware for use with Koa. Supports `opts.esModules: true` for ESM projects — when enabled, returns a `Promise<Middleware>` instead of `Middleware`.
 - `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
 - `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
 - `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `ctx` and `next`.
