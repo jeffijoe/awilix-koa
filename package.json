@@ -17,12 +17,12 @@
   },
   "scripts": {
     "build": "rimraf lib && tsc -p tsconfig.build.json && rollup -c",
-    "test": "jest",
-    "test:watch": "jest --watchAll",
-    "lint": "eslint --fix 'src/**/*.ts' && prettier --write \"src/**/*.ts\"",
-    "cover": "jest --coverage",
-    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
-    "semantic-release": "semantic-release"
+    "test": "node tools/test.cjs",
+    "test:watch": "node tools/test.cjs --watch",
+    "lint": "eslint \"src/**/*.ts\" && prettier --check \"src/**/*.ts\"",
+    "cover": "c8 node tools/test.cjs",
+    "semantic-release": "semantic-release",
+    "check": "tsc -p tsconfig.test.json --noEmit"
   },
   "repository": {
     "type": "git",
@@ -44,104 +44,36 @@
   },
   "homepage": "https://github.com/jeffijoe/awilix-koa#readme",
   "dependencies": {
-    "@koa/router": "^15.3.0",
+    "@koa/router": "^15.7.1",
     "awilix-router-core": "^4.0.0",
     "koa-compose": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/plugin-proposal-decorators": "^7.29.0",
-    "@babel/preset-env": "^7.29.0",
-    "@eslint/js": "^9.39.2",
-    "@rollup/plugin-replace": "^6.0.3",
-    "@rollup/plugin-typescript": "^12.3.0",
-    "@types/jest": "^30.0.0",
-    "@types/koa": "^3.0.1",
-    "@types/koa__router": "^12.0.5",
+    "@eslint/js": "^10.0.1",
+    "@rollup/plugin-typescript": "^12.3.1",
+    "@types/koa": "^3.0.3",
     "@types/koa-compose": "^3.2.9",
-    "@types/koa-router": "^7.4.9",
-    "@types/node": "^25.2.2",
-    "@types/prettier": "^3.0.0",
-    "@types/rimraf": "^4.0.5",
-    "assert-request": "^1.0.6",
-    "awilix": "^12.1.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^30.2.0",
-    "coveralls": "^3.1.1",
-    "eslint": "^9.39.2",
-    "husky": "^9.1.7",
-    "jest": "^30.2.0",
-    "koa": "^3.1.1",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.8.1",
-    "rimraf": "^6.1.2",
-    "rollup": "^4.57.1",
-    "semantic-release": "^25.0.3",
-    "ts-jest": "^29.4.6",
-    "tslib": "^2.8.1",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "tslint --fix --project tsconfig.json",
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*\\.(test|spec))\\.(ts|tsx|js)$",
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "modulePaths": [
-      "src"
-    ],
-    "coverageDirectory": "<rootDir>/coverage",
-    "transform": {
-      "\\.(ts|tsx)": [
-        "ts-jest",
-        {
-          "diagnostics": {
-            "ignoreCodes": [
-              151002
-            ]
-          }
-        }
-      ],
-      "\\.(js|jsx)": "babel-jest"
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "globals": {}
+    "@types/node": "^26.6.6",
+    "awilix": "^13.0.7",
+    "c8": "^12.0.0",
+    "eslint": "^10.15.0",
+    "koa": "^3.3.0",
+    "prettier": "^3.10.1",
+    "rimraf": "^6.1.4",
+    "rollup": "^4.68.8",
+    "semantic-release": "^26.0.1",
+    "tslib": "^2.9.1",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.73.0"
   },
   "prettier": {
     "semi": false,
     "singleQuote": true
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          "legacy": true
-        }
-      ]
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm run build"
+  "overrides": {
+    "test-exclude": {
+      "glob": "14.0.6",
+      "minimatch": "11.0.9"
     }
   }
 }

@@ -1,3 +1,6 @@
+import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
+import { describe, it, beforeEach, afterEach } from 'node:test'
 import Koa from 'koa'
 import * as http from 'http'
 import { loadControllers, controller } from '../controller'
@@ -7,11 +10,11 @@ import { route, GET, createController } from '../'
 import { FindControllersOptions } from 'awilix-router-core'
 import { AddressInfo } from 'net'
 
-const AssertRequest = require('assert-request')
+import { requestFrom } from './request'
 
 describe('controller registration', () => {
   let server: http.Server
-  let request: any
+  let request: ReturnType<typeof requestFrom>
   beforeEach(async () => {
     ;[server, request] = await createServer()
   })
@@ -21,22 +24,18 @@ describe('controller registration', () => {
   it('loads controllers with esModules option', async () => {
     const [esmServer, esmRequest] = await createServer({
       esModules: true,
-      import: (path: string) => Promise.resolve(require(path)),
+      import: (url: string) => Promise.resolve(require(fileURLToPath(url))),
     })
     try {
       await Promise.all([
-        esmRequest
-          .get('/js/get')
-          .okay()
-          .header('x-root-before', 'js')
-          .header('x-root-after', 'js')
-          .json({ message: 'js' }),
-        esmRequest
-          .get('/ts/get')
-          .okay()
-          .header('x-root-before', 'ts')
-          .header('x-root-after', 'ts')
-          .json({ message: 'ts' }),
+        esmRequest('/js/get', {
+          headers: { 'x-root-before': 'js', 'x-root-after': 'js' },
+          json: { message: 'js' },
+        }),
+        esmRequest('/ts/get', {
+          headers: { 'x-root-before': 'ts', 'x-root-after': 'ts' },
+          json: { message: 'ts' },
+        }),
       ])
     } finally {
       esmServer.close()
@@ -45,48 +44,48 @@ describe('controller registration', () => {
 
   it('registers the correct routes', async () => {
     await Promise.all([
-      request
-        .get('/js/get')
-        .okay()
-        .header('x-root-before', 'js')
-        .header('x-root-after', 'js')
-        .json({ message: 'js' }),
-      request
-        .get('/ts/get')
-        .okay()
-        .header('x-root-before', 'ts')
-        .header('x-root-after', 'ts')
-        .json({ message: 'ts' }),
-      request
-        .get('/ts/123')
-        .okay()
-        .header('x-root-before', 'ts')
-        .json({ method: 'GET', id: '123' }),
-      request
-        .post('/ts/123')
-        .okay()
-        .header('x-root-before', 'ts')
-        .json({ method: 'POST', id: '123' }),
-      request.get('/ts').okay().json({ message: 'index' }),
-      request.get('/ping').okay().json({ message: 'pong' }),
-      request.get('/func').okay().json({ message: 'func' }),
-      request.get('/singleton').okay().json({ message: 'singleton' }),
+      request('/js/get', {
+        headers: { 'x-root-before': 'js', 'x-root-after': 'js' },
+        json: { message: 'js' },
+      }),
+      request('/ts/get', {
+        headers: { 'x-root-before': 'ts', 'x-root-after': 'ts' },
+        json: { message: 'ts' },
+      }),
+      request('/ts/123', {
+        headers: { 'x-root-before': 'ts' },
+        json: { method: 'GET', id: '123' },
+      }),
+      request('/ts/123', {
+        method: 'POST',
+        headers: { 'x-root-before': 'ts' },
+        json: { method: 'POST', id: '123' },
+      }),
+      request('/ts', { json: { message: 'index' } }),
+      request('/ping', { json: { message: 'pong' } }),
+      request('/func', { json: { message: 'func' } }),
+      request('/singleton', { json: { message: 'singleton' } }),
     ])
   })
 })
 
 async function createServer(
   loadOpts?: FindControllersOptions<true>,
-): Promise<[http.Server, any]> {
+): Promise<[http.Server, ReturnType<typeof requestFrom>]> {
   const app = new Koa()
   const container = createContainer({ strict: true }).register({
     service: asFunction(() => ({ get: (message: string) => ({ message }) })),
   })
   app.use(scopePerRequest(container))
   if (loadOpts) {
-    app.use(await loadControllers('__fixtures__/1/*.*', loadOpts))
+    app.use(
+      await loadControllers(
+        join(__dirname, '../../__fixtures__/1/*.js'),
+        loadOpts,
+      ),
+    )
   } else {
-    app.use(loadControllers('__fixtures__/1/*.*'))
+    app.use(loadControllers(join(__dirname, '../../__fixtures__/1/*.js')))
   }
   app.use(controller(PlainController))
   app.use(controller([Nothing]))
@@ -103,7 +102,7 @@ async function createServer(
   return new Promise((resolve) => {
     const server = app.listen(() => {
       const addr = server.address() as AddressInfo
-      resolve([server, AssertRequest(`http://127.0.0.1:${addr.port}`)])
+      resolve([server, requestFrom(`http://127.0.0.1:${addr.port}`)])
     })
   })
 }

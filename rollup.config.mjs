@@ -1,14 +1,13 @@
 import typescript from '@rollup/plugin-typescript'
-import { readFileSync } from 'fs'
-
-const tsconfig = JSON.parse(readFileSync('./tsconfig.json', 'utf8'))
 
 const tsOpts = {
+  tsconfig: './tsconfig.build.json',
   compilerOptions: {
-    ...tsconfig.compilerOptions,
     module: 'ESNext',
+    moduleResolution: 'bundler',
     target: 'ES2021',
     declaration: false,
+    outDir: undefined,
   },
   exclude: ['**/__tests__/**'],
 }
