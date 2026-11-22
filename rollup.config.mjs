@@ -25,7 +25,6 @@ export default [
       '@koa/router',
       'koa-compose',
       'awilix',
-      'awilix/lib/utils',
       'assert',
     ],
     plugins: [typescript(tsOpts)],
