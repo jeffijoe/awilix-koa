@@ -7,8 +7,8 @@ import {
   asClass,
   ClassOrFunctionReturning,
   FunctionReturning,
+  isClass,
 } from 'awilix'
-import { isClass } from 'awilix/lib/utils'
 import { MethodName } from 'awilix-router-core'
 import assert from 'assert'
 

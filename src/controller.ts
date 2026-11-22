@@ -17,8 +17,7 @@ import Router from '@koa/router'
  * Constructor type.
  */
 export type ConstructorOrControllerBuilder =
-  | (new (...args: Array<any>) => any)
-  | IAwilixControllerBuilder
+  (new (...args: Array<any>) => any) | IAwilixControllerBuilder
 
 export interface InstanceOptions {
   singleton?: boolean
@@ -33,8 +32,7 @@ export interface InstanceOptions {
  */
 export function controller<TState = DefaultState, TContext = DefaultContext>(
   ControllerClass:
-    | ConstructorOrControllerBuilder
-    | Array<ConstructorOrControllerBuilder>,
+    ConstructorOrControllerBuilder | Array<ConstructorOrControllerBuilder>,
   options?: InstanceOptions,
 ): Middleware<TState, TContext> {
   const router = new Router<TState, TContext>()

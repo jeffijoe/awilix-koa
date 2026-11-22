@@ -1,3 +1,5 @@
+import { describe, it, beforeEach, mock } from 'node:test'
+import assert from 'node:assert/strict'
 import {
   makeClassInvoker,
   makeFunctionInvoker,
@@ -13,9 +15,9 @@ describe('invokers', function () {
   let constructorSpy: any
   let ctx: any
   beforeEach(function () {
-    factorySpy = jest.fn()
-    constructorSpy = jest.fn()
-    methodSpy = jest.fn()
+    factorySpy = mock.fn()
+    constructorSpy = mock.fn()
+    methodSpy = mock.fn()
     container = createContainer({ strict: true })
     container.register('param', asValue(42))
     ctx = {
@@ -32,7 +34,7 @@ describe('invokers', function () {
         const obj = {
           method(ctx: any) {
             methodSpy()
-            expect(this).toBe(obj)
+            assert.strictEqual(this, obj)
             return [ctx, param]
           },
         }
@@ -45,9 +47,9 @@ describe('invokers', function () {
       invoker('method')(ctx)
       const result = invoker('method')(ctx)
 
-      expect(result).toEqual([ctx, 42])
-      expect(factorySpy).toHaveBeenCalledTimes(2)
-      expect(methodSpy).toHaveBeenCalledTimes(2)
+      assert.deepStrictEqual(result, [ctx, 42])
+      assert.strictEqual(factorySpy.mock.callCount(), 2)
+      assert.strictEqual(methodSpy.mock.callCount(), 2)
     })
   })
 
@@ -62,7 +64,7 @@ describe('invokers', function () {
 
         method(ctx: any, additional: any) {
           methodSpy()
-          expect(this).toBeInstanceOf(Target)
+          assert.ok(this instanceof Target)
           return [ctx, this.param, additional]
         }
       }
@@ -73,9 +75,9 @@ describe('invokers', function () {
       invoker('method')(ctx, 'hello')
       const result = invoker('method')(ctx, 'hello')
 
-      expect(result).toEqual([ctx, 42, 'hello'])
-      expect(constructorSpy).toHaveBeenCalledTimes(2)
-      expect(methodSpy).toHaveBeenCalledTimes(2)
+      assert.deepStrictEqual(result, [ctx, 42, 'hello'])
+      assert.strictEqual(constructorSpy.mock.callCount(), 2)
+      assert.strictEqual(methodSpy.mock.callCount(), 2)
     })
   })
 
@@ -94,9 +96,9 @@ describe('invokers', function () {
         converted(ctx, 'hello')
         const result = converted(ctx, 'hello')
 
-        expect(result).toEqual([ctx, 42, 'hello'])
-        expect(constructorSpy).toHaveBeenCalledTimes(2)
-        expect(methodSpy).toHaveBeenCalledTimes(2)
+        assert.deepStrictEqual(result, [ctx, 42, 'hello'])
+        assert.strictEqual(constructorSpy.mock.callCount(), 2)
+        assert.strictEqual(methodSpy.mock.callCount(), 2)
       })
     })
 
@@ -116,9 +118,9 @@ describe('invokers', function () {
         converted(ctx, 'hello')
         const result = converted(ctx, 'hello')
 
-        expect(result).toEqual([ctx, 42, 'hello'])
-        expect(constructorSpy).toHaveBeenCalledTimes(2)
-        expect(methodSpy).toHaveBeenCalledTimes(2)
+        assert.deepStrictEqual(result, [ctx, 42, 'hello'])
+        assert.strictEqual(constructorSpy.mock.callCount(), 2)
+        assert.strictEqual(methodSpy.mock.callCount(), 2)
       })
     })
   })
@@ -141,9 +143,9 @@ describe('invokers', function () {
       const invoker = makeInvoker(Target)
       const result = invoker('method')(ctx)
 
-      expect(result).toEqual(42)
-      expect(constructorSpy).toHaveBeenCalledTimes(1)
-      expect(methodSpy).toHaveBeenCalledTimes(1)
+      assert.deepStrictEqual(result, 42)
+      assert.strictEqual(constructorSpy.mock.callCount(), 1)
+      assert.strictEqual(methodSpy.mock.callCount(), 1)
     })
 
     it('uses makeFunctionInvoker for functions', () => {
@@ -160,9 +162,9 @@ describe('invokers', function () {
       const invoker = makeInvoker(target)
       const result = invoker('method')(ctx)
 
-      expect(result).toEqual(42)
-      expect(factorySpy).toHaveBeenCalledTimes(1)
-      expect(methodSpy).toHaveBeenCalledTimes(1)
+      assert.deepStrictEqual(result, 42)
+      assert.strictEqual(factorySpy.mock.callCount(), 1)
+      assert.strictEqual(methodSpy.mock.callCount(), 1)
     })
   })
 
@@ -177,7 +179,8 @@ describe('invokers', function () {
       const invoker = makeClassInvoker(Target)
       const ctxWithoutContainer = { state: {} }
 
-      expect(() => invoker('method')(ctxWithoutContainer)).toThrow(
+      assert.throws(
+        () => invoker('method')(ctxWithoutContainer),
         'Awilix container not found on Koa state object',
       )
     })
@@ -205,10 +208,10 @@ describe('invokers', function () {
       invoker('method')(ctx)
       const result = invoker('method')(ctx)
 
-      expect(result).toEqual(42)
+      assert.deepStrictEqual(result, 42)
       // Constructor should only be called once due to singleton caching
-      expect(constructorSpy).toHaveBeenCalledTimes(1)
-      expect(methodSpy).toHaveBeenCalledTimes(3)
+      assert.strictEqual(constructorSpy.mock.callCount(), 1)
+      assert.strictEqual(methodSpy.mock.callCount(), 3)
     })
   })
 })

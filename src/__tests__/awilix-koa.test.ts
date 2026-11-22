@@ -1,10 +1,12 @@
+import { describe, it } from 'node:test'
+import assert from 'node:assert/strict'
 import * as awilixKoa from '../'
 
 describe('awilix-koa', function () {
   it('exists', function () {
-    expect(awilixKoa).toBeDefined()
-    expect(awilixKoa.scopePerRequest).toBeDefined()
-    expect(awilixKoa.makeInvoker).toBeDefined()
-    expect(awilixKoa.makeClassInvoker).toBeDefined()
+    assert.notStrictEqual(awilixKoa, undefined)
+    assert.notStrictEqual(awilixKoa.scopePerRequest, undefined)
+    assert.notStrictEqual(awilixKoa.makeInvoker, undefined)
+    assert.notStrictEqual(awilixKoa.makeClassInvoker, undefined)
   })
 })

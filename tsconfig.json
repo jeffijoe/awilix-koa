@@ -1,7 +1,13 @@
 {
-  "exclude": ["node_modules", "lib"],
+  "exclude": [
+    "node_modules",
+    "lib",
+    ".test-out"
+  ],
   "compileOnSave": false,
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts"
+  ],
   "compilerOptions": {
     "outDir": "./lib",
     "strict": true,
@@ -16,7 +22,12 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
-    "lib": ["ES2022"]
+    "lib": [
+      "ES2022"
+    ],
+    "rootDir": "src",
+    "types": [
+      "node"
+    ]
   }
 }

@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "__fixtures__/**/*"
+  ],
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": ".test-out",
+    "allowJs": true,
+    "declaration": false
+  }
+}
